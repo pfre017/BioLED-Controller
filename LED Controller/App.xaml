@@ -113,12 +113,12 @@
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>
                             <Button Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}" Margin="0,8"
-                               Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
-                        CommandParameter="{Binding }"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniButton}" >
-                                <Button.LayoutTransform >
+                                    Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
+                                    CommandParameter="{Binding }"
+                                    Style="{StaticResource MaterialDesignIconButton}" >
+                                <!--<Button.LayoutTransform >
                                     <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
-                                </Button.LayoutTransform>
+                                </Button.LayoutTransform>-->
                                 <md:PackIcon Kind="Pencil" />
                             </Button>
                         </StackPanel>

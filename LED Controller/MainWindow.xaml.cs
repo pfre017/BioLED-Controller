@@ -25,7 +25,6 @@ using System.IO.Ports;
 using System.Collections.Concurrent;
 using MaterialDesignThemes.Wpf;
 using System.Threading;
-using System.Windows;
 
 namespace LED_Controller
 {
