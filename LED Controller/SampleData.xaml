@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common">
+    <LEDControllerCommon:LED 
+        x:Key="SampleLED"
+        Wavelength="470" 
+        DeviceChannelIndex="1" 
+        MaxCurrent="1.5" 
+        IsOn="True" 
+        Mode="Constant"></LEDControllerCommon:LED>
+    
+    <x:Array x:Key="SampleDevices" Type="{x:Type LEDControllerCommon:BioLEDDevice}">
+        <LEDControllerCommon:BioLEDDevice 
+            SerialNumber="XX-XXXX-XX" 
+            ChannelCount="4"></LEDControllerCommon:BioLEDDevice>
+    </x:Array>
+
+    <x:Array x:Key="SampleLEDs" Type="{x:Type LEDControllerCommon:LED}">
+        <LEDControllerCommon:LED 
+        Wavelength="470" 
+        DeviceChannelIndex="1" 
+        MaxCurrent="1.5" 
+        IsOn="True" 
+        Mode="Constant"></LEDControllerCommon:LED>
+        <LEDControllerCommon:LED 
+        Wavelength="590" 
+        DeviceChannelIndex="4" 
+        MaxCurrent="0.5" 
+        IsOn="True" 
+        Mode="Constant"></LEDControllerCommon:LED>
+    </x:Array>
+
+
+</ResourceDictionary>

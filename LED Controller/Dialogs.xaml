@@ -1,0 +1,323 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:ToolKit="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:LEDController="clr-namespace:LED_Controller"
+                    xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
+                    xmlns:HelperCommands="clr-namespace:Helper.Commands;assembly=Helper"
+                    xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=Helper"
+                    xmlns:local="clr-namespace:LED_Controller">
+    <ResourceDictionary.MergedDictionaries>
+        <!-- note you only need bring in these extra resource dictionaries when using non-default styles, so only bring them into your controls where the default style is not what you want -->
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <HelperCommands:HelperCommands x:Key="HelperCommandsTarget"></HelperCommands:HelperCommands>
+    <HelperConverters:InverseBoolConverter x:Key="InverseBoolConverter"></HelperConverters:InverseBoolConverter>
+
+    <ObjectDataProvider x:Key="LEDModes"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="LEDControllerCommon:LEDModeEnum"></x:Type>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <x:Array x:Key="DefaultWavelengths" Type="{x:Type sys:String}">
+        <sys:String >400</sys:String>
+        <sys:String >470</sys:String>
+        <sys:String >530</sys:String>
+        <sys:String >590</sys:String>
+    </x:Array>
+
+    <LEDControllerCommon:WavelengthToBrushConverter x:Key="WavelengthToBrushConverter"></LEDControllerCommon:WavelengthToBrushConverter>
+
+
+    <StackPanel x:Key="DIALOG_EditLED" Margin="20,20,20,0" >
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MaterialDesignCheckBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+        </StackPanel.Resources>
+
+        <TextBox  md:HintAssist.Hint="Device Channel #" md:HintAssist.IsFloating="True">
+            <TextBox.Text>
+                <Binding Path="DeviceChannelIndex" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <LEDControllerCommon:NotZeroValidationRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:NotZeroValidationRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+        <Grid >
+            <ComboBox Grid.Row="0" HorizontalAlignment="Left" md:HintAssist.Hint="Wavelength"
+                      ItemsSource="{StaticResource DefaultWavelengths}"
+                      IsEditable="True"
+                      ToolTip="Wavelength">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate >
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Fill="{Binding Converter={StaticResource WavelengthToBrushConverter}}" Width="20" Height="20"></Ellipse>
+                            <TextBlock Text="{Binding }" VerticalAlignment="Bottom" Margin="15,0"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <ComboBox.Text>
+                    <Binding
+      Path="Wavelength"
+      Mode="TwoWay"
+      UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <LEDControllerCommon:NotEmptyValidationRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:NotEmptyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </ComboBox.Text>
+            </ComboBox>
+            <Button 
+                Background="{Binding Fill}"
+                BorderBrush="Transparent"
+                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center">
+            </Button>
+        </Grid>
+        <ComboBox SelectedItem="{Binding Mode}" ItemsSource="{Binding Source={StaticResource LEDModes}}" VerticalAlignment="Center" 
+                  md:HintAssist.Hint="Mode" md:HintAssist.IsFloating="True" Style="{DynamicResource MaterialDesignFloatingHintComboBox}"></ComboBox>
+        <!--<TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
+                                 Text="{Binding Intensity, Delay=200}" Grid.Row="2" Grid.Column="1" Background="Transparent"></TextBox>-->
+        <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
+                                 Background="Transparent">
+            <TextBox.Text>
+                <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <LEDControllerCommon:LedRangeRule ></LEDControllerCommon:LedRangeRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+        <!--<ToolKit:DoubleUpDown Minimum="0" Maximum="1" Increment="0.001" Width="100" HorizontalAlignment="Left"  Grid.Row="2" FormatString="P" Value="{Binding Intensity, Delay=200}" 
+                              Margin="0,8,0,8"></ToolKit:DoubleUpDown>-->
+
+        <!--<TextBlock Text="{Binding DeviceDetailString}" TextWrapping="Wrap" MaxWidth="150" HorizontalAlignment="Left" Grid.Row="6" 
+                   md:HintAssist.Hint="BioLED Device"></TextBlock>-->
+        <CheckBox IsChecked="{Binding IsFavourite}"
+                  md:HintAssist.Hint="Is Favourite (show in Compact Mode)" md:HintAssist.IsFloating="True">Is Favourite</CheckBox>
+        <CheckBox IsChecked="{Binding IsLinkedToAnalogueChannel}" 
+                  md:HintAssist.Hint="Linked to Analogue Channel" md:HintAssist.IsFloating="True">Is Linked to Analogue Channel</CheckBox>
+
+        <TextBox Text="{Binding LinkedAnalogueChannelName}"
+                 IsEnabled="{Binding IsLinkedToAnalogueChannel}"
+                 md:HintAssist.Hint="Linked Analogue Channel Name" md:HintAssist.IsFloating="True"></TextBox>
+
+        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right"  Margin="10,2, 0, 2">
+            <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
+                    Command="md:DialogHost.CloseDialogCommand" >
+                <Button.CommandParameter>
+                    <sys:Boolean >False</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Close"></md:PackIcon>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="md:DialogHost.CloseDialogCommand" IsDefault="True">
+                <Button.CommandParameter>
+                    <sys:Boolean >True</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Check"></md:PackIcon>
+            </Button>
+        </StackPanel>
+
+    </StackPanel>
+
+    <StackPanel x:Key="DIALOG_About" Margin="20,20,20,20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <md:ColorZone Mode="PrimaryDark">
+                <TextBlock Text="LED Controller" Grid.Row="0" Margin="10,10,30,10" Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+            </md:ColorZone>
+            <TextBlock Text="Peter S Freestone 2018" Margin="10" Grid.Row="1" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
+            <TextBlock Text="{Binding Version}" Grid.Row="2" Margin="10" Style="{StaticResource MaterialDesignBody1TextBlock}"></TextBlock>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="HelperCommands:HelperCommands.OpenFolderCommand" Grid.Row="3" CommandParameter="{Binding SettingsFolder}" CommandTarget="{StaticResource HelperCommandsTarget}" IsDefault="True">
+                Open Settings Folder
+            </Button>
+            <StackPanel Orientation="Horizontal" Grid.Row="99"  HorizontalAlignment="Right"  Margin="10,2, 0, 2">
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Command="md:DialogHost.CloseDialogCommand" IsDefault="True">
+                    <Button.CommandParameter>
+                        <sys:Boolean >True</sys:Boolean>
+                    </Button.CommandParameter>
+                    <md:PackIcon Kind="Check"></md:PackIcon>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+
+    <StackPanel x:Key="DIALOG_ArduinoDevice" Margin="20,20,20,20" >
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MaterialDesignCheckBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+        </StackPanel.Resources>
+
+
+        <ComboBox ItemsSource="{Binding COMPorts}"
+                                  SelectedItem="{Binding SelectedCOMPort}" md:HintAssist.Hint="COM Port"></ComboBox>
+        <ComboBox ItemsSource="{Binding BaudRates}" SelectedItem="{Binding SelectedBaudRate}"
+                  md:HintAssist.Hint="Baud Rate"></ComboBox>
+
+        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="LEDController:MainWindow.ConnectArduinoCommand"
+                >Connect</Button>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="99"  HorizontalAlignment="Right"  Margin="0,5, 0, 0">
+            <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
+                    Command="md:DialogHost.CloseDialogCommand" >
+                <Button.CommandParameter>
+                    <sys:Boolean >False</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Close"></md:PackIcon>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="md:DialogHost.CloseDialogCommand" IsDefault="True">
+                <Button.CommandParameter>
+                    <sys:Boolean >True</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Check"></md:PackIcon>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+
+    <StackPanel  x:Key="Dialog_NoBioLEDDevices" Margin="20">
+        <TextBlock Text="No MightEx BioLED devices could be found"  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
+                    Command="md:DialogHost.CloseDialogCommand"></Button>
+    </StackPanel>
+    <StackPanel  x:Key="Dialog_BaudRateNotSet" Margin="20">
+        <TextBlock Text="Baud Rate not set" FontWeight="Black" Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
+                    Command="md:DialogHost.CloseDialogCommand"></Button>
+    </StackPanel>
+    <StackPanel  x:Key="Dialog_COMPortNotSet" Margin="20">
+        <TextBlock Text="COM Port not set" FontWeight="Black"  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
+                    Command="md:DialogHost.CloseDialogCommand"></Button>
+    </StackPanel>
+    <StackPanel  x:Key="Dialog_COMPorttTimeout" Margin="20">
+        <TextBlock Text="COM Port connection failed" FontWeight="Black"  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
+                    Command="md:DialogHost.CloseDialogCommand"></Button>
+    </StackPanel>
+    <StackPanel  x:Key="DIALOG_NotImplemented" Margin="20">
+        <TextBlock Text="Not implemented yet" FontWeight="Black"  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
+                    Command="md:DialogHost.CloseDialogCommand"></Button>
+    </StackPanel>
+
+    
+    
+    
+    <!--<StackPanel x:Key="DIALOG_MapScaling" Margin="20,20,20,20" >
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MaterialDesignCheckBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+
+            <ObjectDataProvider x:Key="ScaleModes" MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="LEDControllerCommon:LEDModeEnum">
+                    </x:Type>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+        </StackPanel.Resources>
+
+        <TextBlock Text="Scaling" Grid.Row="0" Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+
+        <ComboBox Grid.Row="1" HorizontalAlignment="Left" md:HintAssist.Hint="Scaling Mode"
+                      ItemsSource="{Binding Source={StaticResource ScaleModes}}"
+                      ToolTip="Scaling Mode">
+        </ComboBox>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox  md:HintAssist.Hint="Minimum" md:HintAssist.IsFloating="True" Grid.Row="0" Grid.Column="0">
+                <TextBox.Text>
+                    <Binding Path="Minimum" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <LEDControllerCommon:NotEmptyValidationRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:NotEmptyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Grid.Row="0" Grid.Column="1"
+                    ToolTip="Find Minimum">
+                <md:PackIcon Kind="Magnify"></md:PackIcon>
+            </Button>
+            <TextBox  md:HintAssist.Hint="Maximum" md:HintAssist.IsFloating="True" Grid.Row="1"  Grid.Column="0">
+                <TextBox.Text>
+                    <Binding Path="Maximum" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <LEDControllerCommon:NotEmptyValidationRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:NotEmptyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Grid.Row="1" Grid.Column="1"
+                    ToolTip="Find Maximum">
+                <md:PackIcon Kind="Magnify"></md:PackIcon>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignRaisedDarkButton}">Scale Selected</Button>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="99"  HorizontalAlignment="Right"  Margin="10,2, 0, 2">
+            <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
+                    Command="md:DialogHost.CloseDialogCommand" >
+                <Button.CommandParameter>
+                    <sys:Boolean >True</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Close"></md:PackIcon>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="md:DialogHost.CloseDialogCommand" IsDefault="True">
+                <Button.CommandParameter>
+                    <sys:Boolean >True</sys:Boolean>
+                </Button.CommandParameter>
+                <md:PackIcon Kind="Check"></md:PackIcon>
+            </Button>
+        </StackPanel>
+
+    </StackPanel>-->
+
+</ResourceDictionary>
