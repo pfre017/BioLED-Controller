@@ -75,14 +75,10 @@
                                     </ToolTip>
                                 </md:PackIcon.ToolTip>
                             </md:PackIcon>
-                            <md:PackIcon Kind="Exclamation" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                            <md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
                                      ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>
                         </StackPanel>
 
-                        <!--<ToolKit:IntegerUpDown Minimum="0" Maximum="100" Increment="1"   Grid.Row="0"
-                                          Grid.Column="1" Background="Transparent" Margin="0,5"
-                                          Value="{Binding Intensity, Delay=200}" FontSize="42" Width="200" DockPanel.Dock="Top" BorderBrush="Transparent"
-                                          IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}"></ToolKit:IntegerUpDown>-->
                         <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right"
                                  Grid.Row="0" Grid.Column="1" Background="Transparent" Margin="10,10">
                             <TextBox.Text>
@@ -116,9 +112,6 @@
                                     Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
                                     CommandParameter="{Binding }"
                                     Style="{StaticResource MaterialDesignIconButton}" >
-                                <!--<Button.LayoutTransform >
-                                    <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
-                                </Button.LayoutTransform>-->
                                 <md:PackIcon Kind="Pencil" />
                             </Button>
                         </StackPanel>
@@ -127,7 +120,6 @@
                             <WrapPanel.Resources>
                                 <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
                                     <!--DIFFICULTY GETTING ACCESS TO TAG ON TEH BUTTON-->
-
                                     <Setter Property="Margin" Value="3,2"></Setter>
                                     <Setter Property="Padding" Value="10,1"></Setter>
                                 </Style>
