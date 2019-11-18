@@ -52,10 +52,10 @@
                             <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" IsChecked="{Binding IsOn}" Margin="4,4"
                                           ToolTip="Turn LED ON/OFF">
                                 <ToggleButton.Content>
-                                    <md:PackIcon Kind="LedOff" Width="30"></md:PackIcon>
+                                    <md:PackIcon Kind="LightbulbOnOutline" Width="30"></md:PackIcon>
                                 </ToggleButton.Content>
                                 <md:ToggleButtonAssist.OnContent>
-                                    <md:PackIcon Kind="LedOn" Width="30"></md:PackIcon>
+                                    <md:PackIcon Kind="LightbulbOffOutline" Width="30"></md:PackIcon>
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>
                             <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" IsChecked="{Binding IsFavourite}" Margin="4,4"
