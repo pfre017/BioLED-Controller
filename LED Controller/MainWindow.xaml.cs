@@ -39,16 +39,7 @@ namespace LED_Controller
         {
             InitializeComponent();
 
-            //SetValue(LEDsProperty, new ObservableCollection<LED>());
-            //SetValue(AvailableLEDsProperty, new ObservableCollection<LED>());
             SetValue(DevicesProperty, new ObservableCollection<BioLEDDevice>());
-
-            //this.Devices.CollectionChanged += (object o, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
-            //{
-            //    HasDevices = this.Devices.Count() > 0;
-            //};
-
-
             SetValue(IsShutterOpenProperty, false);
             SetValue(COMPortsProperty, new ObservableCollection<string>());
             SetValue(BaudRatesProperty, new ObservableCollection<string>());
@@ -63,8 +54,6 @@ namespace LED_Controller
         #endregion
 
         #region Dependency Properties
-
-
 
         public bool IsDarkUIMode
         {
@@ -85,7 +74,6 @@ namespace LED_Controller
             palette.SetTheme(theme);
         }
 
-
         public bool IsCompactMode
         {
             get { return (bool)GetValue(IsCompactModeProperty); }
@@ -94,9 +82,14 @@ namespace LED_Controller
 
         // Using a DependencyProperty as the backing store for IsCompactMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsCompactModeProperty =
-            DependencyProperty.Register("IsCompactMode", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+            DependencyProperty.Register("IsCompactMode", typeof(bool), typeof(MainWindow), new PropertyMetadata(false, OnIsCompactModeChanged));
 
+        private static void OnIsCompactModeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
 
+            CollectionViewSource cvs = (CollectionViewSource)App.Current.MainWindow.Resources["FavouriteLEDs"];
+            cvs.View.Refresh();
+        }
 
         public ObservableCollection<string> COMPorts
         {
