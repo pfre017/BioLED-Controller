@@ -4,7 +4,7 @@
              StartupUri="MainWindow.xaml"
              xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=Helper"
+             xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
              xmlns:HelperControls="clr-namespace:Helper.Controls;assembly=Helper"
              xmlns:LEDController="clr-namespace:LED_Controller"
              xmlns:ToolKit="http://schemas.xceed.com/wpf/xaml/toolkit"

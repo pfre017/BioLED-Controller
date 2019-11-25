@@ -5,8 +5,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:LEDController="clr-namespace:LED_Controller"
                     xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
-                    xmlns:HelperCommands="clr-namespace:Helper.Commands;assembly=Helper"
-                    xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=Helper"
+                    xmlns:HelperCommands="clr-namespace:Helper.Commands;assembly=SNSHelper"
+                    xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
                     xmlns:local="clr-namespace:LED_Controller">
     <ResourceDictionary.MergedDictionaries>
         <!-- note you only need bring in these extra resource dictionaries when using non-default styles, so only bring them into your controls where the default style is not what you want -->

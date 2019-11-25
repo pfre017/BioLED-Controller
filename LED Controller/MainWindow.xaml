@@ -21,10 +21,6 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
-    <!--<Window.Icon>
-			<md:PackIcon Kind="LedOn"/>
-		</Window.Icon>-->
-
     <Window.Resources>
         <CollectionViewSource x:Key="FavouriteLEDs" Source="{Binding SelectedDevice.LEDs}" Filter="CollectionViewSource_Filter" IsLiveFilteringRequested="True">
             <CollectionViewSource.LiveFilteringProperties>
