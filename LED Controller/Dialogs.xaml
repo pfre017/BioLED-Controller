@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:ToolKit="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:LEDController="clr-namespace:LED_Controller"
                     xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
@@ -95,9 +94,21 @@
         <!--<TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
                                  Text="{Binding Intensity, Delay=200}" Grid.Row="2" Grid.Column="1" Background="Transparent"></TextBox>-->
         <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
-                                 Background="Transparent">
+                 md:HintAssist.Hint="Intensity"
+                 Background="Transparent">
             <TextBox.Text>
                 <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <LEDControllerCommon:LedRangeRule ></LEDControllerCommon:LedRangeRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}"
+                 md:HintAssist.Hint="Off Intensity"
+                 Background="Transparent">
+            <TextBox.Text>
+                <Binding Path="OffIntensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <LEDControllerCommon:LedRangeRule ></LEDControllerCommon:LedRangeRule>
                     </Binding.ValidationRules>

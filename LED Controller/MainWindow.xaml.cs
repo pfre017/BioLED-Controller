@@ -868,9 +868,6 @@ namespace LED_Controller
         {
 
             //THIS STILL DOES NOT WORK
-
-
-
             Debug.Print("Send_LEDIntensity::    {0} (sending value:{1})", LED.DeviceDetailString, (int)Math.Floor(LED.Intensity * 10));
             int result;
 
@@ -881,7 +878,6 @@ namespace LED_Controller
             }
             else
             {
-
 
                 if (LED.Mode == LEDModeEnum.Constant)
                 {
@@ -898,7 +894,16 @@ namespace LED_Controller
                 }
                 if (LED.Mode == LEDModeEnum.Follower)
                     //What to do if LED is OFF, for FOLLOWER mode?
-                    result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10), (int)Math.Floor(LED.OffIntensity * 10));
+                    if (LED.IsOn == false)
+                    {
+                        //LED is OFF, send 0 Intensity
+                        result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
+                        return;
+                    }
+                    else
+                    {
+                        result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10), (int)Math.Floor(LED.OffIntensity * 10));
+                    }
                 if (LED.Mode == LEDModeEnum.Pulse)
                     DialogHost.Show(this.Resources["DIALOG_NotImplemented"]);
 

@@ -28,7 +28,7 @@ namespace LED_Controller.Common
             set
             {
                 IsLinkedToAnalogueChannel_ = value;
-                base.RaisePropertyChanged("IsLinkedToAnalogueChannel");
+                base.RaisePropertyChanged(nameof(IsLinkedToAnalogueChannel));
             }
         }
         private bool IsLinkedToAnalogueChannel_ = false;
@@ -39,7 +39,7 @@ namespace LED_Controller.Common
             set
             {
                 LinkedAnalogueChannelName_ = value;
-                base.RaisePropertyChanged("LinkedAnalogueChannelName");
+                base.RaisePropertyChanged(nameof(LinkedAnalogueChannelName));
             }
         }
         private string LinkedAnalogueChannelName_;
@@ -54,7 +54,7 @@ namespace LED_Controller.Common
 
                 }
                 Intensity_ = value;
-                base.RaisePropertyChanged("Intensity");
+                base.RaisePropertyChanged(nameof(Intensity));
                 OnIntensityChanged(Intensity_);
             }
         }
@@ -69,7 +69,7 @@ namespace LED_Controller.Common
             set
             {
                 OffIntensity_ = value;
-                base.RaisePropertyChanged("OffIntensity");
+                base.RaisePropertyChanged(nameof(OffIntensity));
             }
         }
         private double OffIntensity_ = 0;
@@ -80,7 +80,7 @@ namespace LED_Controller.Common
             set
             {
                 IsOn_ = value;
-                base.RaisePropertyChanged("IsOn");
+                base.RaisePropertyChanged(nameof(IsOn));
                 OnIsOnChanged(IsOn_);
             }
         }
@@ -90,7 +90,7 @@ namespace LED_Controller.Common
         {
             get { return IsFavourite_; }
             set { IsFavourite_ = value;
-                base.RaisePropertyChanged("IsFavourite");
+                base.RaisePropertyChanged(nameof(IsFavourite));
             }
         }
         private bool IsFavourite_;
@@ -107,7 +107,7 @@ namespace LED_Controller.Common
                     intensities_.Add(Mode_, Intensity);
 
                 Mode_ = value;
-                base.RaisePropertyChanged("Mode");
+                base.RaisePropertyChanged(nameof(Mode));
                 OnModeChanged(Mode_);
             }
         }
@@ -119,7 +119,7 @@ namespace LED_Controller.Common
             set
             {
                 MaxCurrent_ = value;
-                base.RaisePropertyChanged("MaxCurrent");
+                base.RaisePropertyChanged(nameof(MaxCurrent));
             }
         }
         private double MaxCurrent_ = 1.5;
@@ -130,7 +130,7 @@ namespace LED_Controller.Common
             set
             {
                 Wavelength_ = value;
-                base.RaisePropertyChanged("Wavelength");
+                base.RaisePropertyChanged(nameof(Wavelength));
                 Fill = new SolidColorBrush(LEDControllerHelper.WavelengthToColor(Wavelength_));
             }
         }
@@ -167,7 +167,7 @@ namespace LED_Controller.Common
             set
             {
                 DeviceChannelIndex_ = value;
-                base.RaisePropertyChanged("DeviceChannelIndex");
+                base.RaisePropertyChanged(nameof(DeviceChannelIndex));
             }
         }
 
@@ -182,15 +182,15 @@ namespace LED_Controller.Common
                     Device_.PropertyChanged -= Device__PropertyChanged;
                 Device_ = value;
                 Device_.PropertyChanged += Device__PropertyChanged;
-                base.RaisePropertyChanged("Device");
-                base.RaisePropertyChanged("IsConnected");
+                base.RaisePropertyChanged(nameof(Device));
+                base.RaisePropertyChanged(nameof(IsConnected));
             }
         }
 
         private void Device__PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsConnected")
-                base.RaisePropertyChanged("IsConnected");
+                base.RaisePropertyChanged(nameof(IsConnected));
         }
 
 
@@ -226,7 +226,7 @@ namespace LED_Controller.Common
             private set
             {
                 Fill_ = value;
-                base.RaisePropertyChanged("Fill");
+                base.RaisePropertyChanged(nameof(Fill));
             }
         }
         private Brush Fill_;
@@ -292,7 +292,7 @@ namespace LED_Controller.Common
                     if (intensities_.ContainsKey(i.Mode) == false)
                         intensities_.Add(i.Mode, i.Intensity);
                 }
-                base.RaisePropertyChanged("Intensities");
+                base.RaisePropertyChanged(nameof(Intensities));
             }
         }
 
