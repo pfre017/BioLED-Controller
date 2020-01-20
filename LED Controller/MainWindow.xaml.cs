@@ -736,38 +736,12 @@ namespace LED_Controller
 
             GetDevices();
 
-            //foreach (BioLEDDevice device in Devices)
-            //{
-            //    for (int channelnumber = 0; channelnumber < device.ChannelCount; channelnumber++)
-            //    {
-            //        //only add LEDs not already saved in the Settings File
-            //        if (LEDs.Count(a => a.DeviceSerialNumber == device.SerialNumber & a.DeviceChannelIndex == channelnumber) == 0)
-            //        {
-            //            LEDs.Add(new LED() { DeviceChannelIndex = channelnumber, DeviceSerialNumber = device.SerialNumber, Device = device, IsConnected = true });
-            //        }
-            //    }
-            //}
-            //set IsConnected for the LEDs found on the device
-
-
-
-
             foreach (BioLEDDevice device in Devices)
             {
-                //device.LEDs.AsParallel().ForAll(a => a.IsConnected = true);
                 device.LEDs.AsParallel().ForAll(a => a.Device = device);
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged += LED_IntensityChanged);
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
                 device.LEDs.AsParallel().ForAll(a => a.ModeChanged += LED_ModeChanged);
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(b => b.IsConnected = true);
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(b => b.Device = device);
-
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(a => a.IntensityChanged += LED_IntensityChanged);
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(a => a.ModeChanged += LED_ModeChanged);
-                ////get initial settings back from the hardware?
-
-                //LEDs.Where(a => a.DeviceSerialNumber == device.SerialNumber).AsParallel().ForAll(a => a.IsOn = false);
             }
         }
 
@@ -867,14 +841,12 @@ namespace LED_Controller
         private void Send_LEDIntensity(LED LED, double Value)
         {
 
-            //THIS STILL DOES NOT WORK
             Debug.Print("Send_LEDIntensity::    {0} (sending value:{1})", LED.DeviceDetailString, (int)Math.Floor(LED.Intensity * 10));
-            int result;
 
             if (LED.Mode == LEDModeEnum.Disabled)
             {
-                result = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
-                result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
+                _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
+                _ = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
             }
             else
             {
@@ -884,12 +856,12 @@ namespace LED_Controller
                     if (LED.IsOn == false)
                     {
                         //LED is OFF, send 0 Intensity
-                        result = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
+                        _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
                         return;
                     }
                     else
                     {
-                        result = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10));
+                        _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10));
                     }
                 }
                 if (LED.Mode == LEDModeEnum.Follower)
@@ -897,12 +869,12 @@ namespace LED_Controller
                     if (LED.IsOn == false)
                     {
                         //LED is OFF, send 0 Intensity
-                        result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
+                        _ = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
                         return;
                     }
                     else
                     {
-                        result = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10), (int)Math.Floor(LED.OffIntensity * 10));
+                        _ = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10), (int)Math.Floor(LED.OffIntensity * 10));
                     }
                 if (LED.Mode == LEDModeEnum.Pulse)
                     DialogHost.Show(this.Resources["DIALOG_NotImplemented"]);
@@ -912,11 +884,6 @@ namespace LED_Controller
                 else
                     sentvalues.Add(LED, Value);
             }
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(string.Format("Send_LEDIntensity failed\n\n{0} {1}\n\n{2}", e.HResult, e.Message, e.ToString()), "Error");
-            //}
         }
 
         private Dictionary<LED, double> sentvalues = new Dictionary<LED, double>();

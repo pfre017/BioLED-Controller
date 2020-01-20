@@ -72,9 +72,9 @@
                 </ComboBox.ItemTemplate>
                 <ComboBox.Text>
                     <Binding
-      Path="Wavelength"
-      Mode="TwoWay"
-      UpdateSourceTrigger="PropertyChanged">
+                          Path="Wavelength"
+                          Mode="TwoWay"
+                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <LEDControllerCommon:NotEmptyValidationRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:NotEmptyValidationRule>
                         </Binding.ValidationRules>
@@ -95,6 +95,7 @@
                                  Text="{Binding Intensity, Delay=200}" Grid.Row="2" Grid.Column="1" Background="Transparent"></TextBox>-->
         <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
                  md:HintAssist.Hint="Intensity"
+                 md:HintAssist.IsFloating="True"
                  Background="Transparent">
             <TextBox.Text>
                 <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
@@ -106,6 +107,7 @@
         </TextBox>
         <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}"
                  md:HintAssist.Hint="Off Intensity"
+                 md:HintAssist.IsFloating="True"
                  Background="Transparent">
             <TextBox.Text>
                 <Binding Path="OffIntensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
