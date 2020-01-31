@@ -33,7 +33,6 @@
 
     <LEDControllerCommon:WavelengthToBrushConverter x:Key="WavelengthToBrushConverter"></LEDControllerCommon:WavelengthToBrushConverter>
 
-
     <StackPanel x:Key="DIALOG_EditLED" Margin="20,20,20,0" >
         <StackPanel.Resources>
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
