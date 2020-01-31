@@ -19,8 +19,6 @@ namespace LED_Controller.Common
             LEDs.CollectionChanged += LEDs_CollectionChanged;
         }
 
-
-
         public BioLEDDevice()
         {
             LEDs.CollectionChanged += LEDs_CollectionChanged;
