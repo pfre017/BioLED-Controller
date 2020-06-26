@@ -13,8 +13,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.BlueGrey.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Orange.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="SampleData.xaml" ></ResourceDictionary>
                 <ResourceDictionary Source="Dialogs.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -70,10 +70,10 @@
                                 <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
                             ToolTip="Turn LED ON/OFF">
                                     <ToggleButton.Content>
-                                        <md:PackIcon Kind="LightbulbOnOutline" Height="40" Width="40"></md:PackIcon>
+                                        <md:PackIcon Kind="LightbulbOffOutline" Height="40" Width="40"></md:PackIcon>
                                     </ToggleButton.Content>
                                     <md:ToggleButtonAssist.OnContent>
-                                        <md:PackIcon Kind="LightbulbOffOutline" Height="40" Width="40"></md:PackIcon>
+                                        <md:PackIcon Kind="LightbulbOnOutline" Height="40" Width="40"></md:PackIcon>
                                     </md:ToggleButtonAssist.OnContent>
                                 </ToggleButton>
                                 <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right"

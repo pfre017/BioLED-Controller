@@ -34,6 +34,8 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <!--<HelperControls:ImageButton ImageSource="Icons/appbar.add.png"
                                             Command="{x:Static LEDController:MainWindow.AddLED}" ToolTip="Add LED">Add</HelperControls:ImageButton>-->
@@ -165,7 +167,8 @@
                     </md:TransitioningContent>
                 </Grid>
             </GroupBox>
-            <ListBox Grid.Row="2"  ItemsSource="{Binding Source={StaticResource FavouriteLEDs}}" ScrollViewer.CanContentScroll="False"  Visibility="{Binding IsCompactMode, Converter={StaticResource BoolVisibilityConverter}}"
+            <ListBox Grid.Row="2"  ItemsSource="{Binding Source={StaticResource FavouriteLEDs}}" ScrollViewer.CanContentScroll="False" 
+                     Visibility="{Binding IsCompactMode, Converter={StaticResource BoolVisibilityConverter}}"
                      SelectedItem="{Binding SelectedLED}"
                 SelectionMode="Single" >
                 <ListBox.ItemsPanel>
@@ -174,6 +177,13 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
+            <GridSplitter Grid.Row="3" Grid.ColumnSpan="2"  Background="{StaticResource MaterialDesignDivider}"
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch" Height="10"></GridSplitter>
+            <ListBox x:Name="Logger" Grid.Row="4" VerticalAlignment="Stretch" MinHeight="50" ItemsSource="{Binding Logs}"
+                ScrollViewer.CanContentScroll="True"
+                     Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}"></ListBox>
+            
             <md:Snackbar Grid.Row="99" Grid.RowSpan="99" VerticalAlignment="Bottom" x:Name="snackbar" MessageQueue="{md:MessageQueue}"></md:Snackbar>
         </Grid>
     </md:DialogHost>

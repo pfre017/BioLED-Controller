@@ -22,6 +22,8 @@ namespace LED_Controller.Common
 
         #endregion
 
+
+        #region AnalogueChannel Linking
         public bool IsLinkedToAnalogueChannel
         {
             get { return IsLinkedToAnalogueChannel_; }
@@ -43,6 +45,8 @@ namespace LED_Controller.Common
             }
         }
         private string LinkedAnalogueChannelName_;
+
+        #endregion
 
         public double Intensity
         {
@@ -136,29 +140,7 @@ namespace LED_Controller.Common
         }
         private int Wavelength_ = 470;
 
-        //private bool IsFavourite_;
-        //public bool IsFavourite
-        //{
-        //    get { return IsFavourite_; }
-        //    set
-        //    {
-        //        IsFavourite_ = value;
-        //        base.RaisePropertyChanged("IsFavourite");
-        //    }
-        //}
-
         #region Device
-
-        //private string DeviceSerialNumber_;
-        //public string DeviceSerialNumber
-        //{
-        //    get { return DeviceSerialNumber_; }
-        //    set
-        //    {
-        //        DeviceSerialNumber_ = value;
-        //        base.RaisePropertyChanged("DeviceSerialNumber");
-        //    }
-        //}
 
         private int DeviceChannelIndex_;
         public int DeviceChannelIndex
@@ -196,12 +178,10 @@ namespace LED_Controller.Common
 
         #endregion
 
-        //private bool IsConnected_ = false;
         [XmlIgnore]
         public bool IsConnected
         {
             get {
-                //return IsConnected_;
                 if (Device_ == null)
                     return false;
                 return Device_.IsConnected;
@@ -212,7 +192,7 @@ namespace LED_Controller.Common
         {
             get
             {
-                return string.Format("{0}  [#{1}]{2} Mode: {3} Intensity: {4}", Device.SerialNumber, DeviceChannelIndex, IsConnected ? " Connected" : " Disconnected", this.Mode, this.Intensity);
+                return string.Format("Device #{0}  {5}nm  [ChannelIndex #{1}  {2}] Mode: {3} Intensity: {4}%", Device.SerialNumber, DeviceChannelIndex, IsConnected ? " CONNECTED" : " DISCONNECTED", this.Mode.ToString().ToUpper(), this.Intensity, this.Wavelength);
             }
         }
 
@@ -233,7 +213,7 @@ namespace LED_Controller.Common
 
         public override string ToString()
         {
-            return string.Format("LED {0}nm {1} {2}", Wavelength, IsOn ? "ON" : "OFF", IsConnected ? "Connected" : "Disconnected");
+            return string.Format("LED {0}nm  {1}  [ChannelIndex #{3}  {2}]", Wavelength, IsOn ? "ON" : "OFF", IsConnected ? "CONNECTED" : "DISCONNECTED", DeviceChannelIndex);
         }
 
         #region Events

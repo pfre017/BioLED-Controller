@@ -532,13 +532,24 @@ namespace LED_Controller
 
             var result = await DialogHost.Show(o);
 
-            this.SelectedDevice.LEDs.Add(led);
-            snackbar.MessageQueue.Enqueue(string.Format("LED ({0} nm) ADDED", led.Wavelength));
-            SaveSettings();
+            if ((bool)result)
+            {
+                led.IntensityChanged += LED_IntensityChanged;
+                led.IsOnChanged += LED_IsOnChanged;
+                led.ModeChanged += LED_ModeChanged;
+
+                this.SelectedDevice.LEDs.Add(led);
+                snackbar.MessageQueue.Enqueue(string.Format("LED ({0} nm) ADDED", led.Wavelength));
+                SaveSettings();
+            }
         }
 
         public void RemoveLED(LED LED)
         {
+            LED.IntensityChanged -= LED_IntensityChanged;
+            LED.IsOnChanged -= LED_IsOnChanged;
+            LED.ModeChanged -= LED_ModeChanged;
+
             this.SelectedDevice.LEDs.Remove(LED);
             snackbar.MessageQueue.Enqueue(string.Format("LED REMOVED", LED.Wavelength));
 
@@ -562,7 +573,7 @@ namespace LED_Controller
         void LED_ModeChanged(object sender, Helper.Common.EventArgs<LEDModeEnum> e)
         {
             LED led = (LED)sender;
-            Debug.Print("LED_ModeChanged to {0} for {1}", e.Value.ToString(), led.ToString());
+            Log("LED_ModeChanged called for (new value = {0}) for {1}", e.Value.ToString(), led.DeviceDetailString);
 
             if (e.Value == LEDModeEnum.Pulse)
             {
@@ -577,6 +588,7 @@ namespace LED_Controller
         {
             LED led = (LED)sender;
             Send_LEDIntensity(led, led.Intensity);      //Send_LEDIntensity will check the ON/OFF status, and send the appropriate Intensity
+            Log("LED_IsOnChanged called for {0}", led.DeviceDetailString);
             //try
             //{
             //    LED led = (LED)sender;
@@ -690,6 +702,10 @@ namespace LED_Controller
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
                 device.LEDs.AsParallel().ForAll(a => a.ModeChanged += LED_ModeChanged);
 
+                foreach (LED led in device.LEDs)
+                {
+                    BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
+                }
             }
 
             this.SelectedDevice = Devices.FirstOrNullObject(null);
@@ -729,6 +745,8 @@ namespace LED_Controller
             //Remove event handlers from OLD devices before calling GetDevices (which clears all devices)
             foreach (BioLEDDevice device in Devices)
             {
+                Log(string.Format("Removing event handlers from BioLEDDevice #{0}", device.SerialNumber));
+
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged -= LED_IntensityChanged);
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged -= LED_IsOnChanged);
                 device.LEDs.AsParallel().ForAll(a => a.ModeChanged -= LED_ModeChanged);
@@ -738,6 +756,8 @@ namespace LED_Controller
 
             foreach (BioLEDDevice device in Devices)
             {
+                Log(string.Format("Adding event handlers for BioLEDDevice #{0}", device.SerialNumber));
+
                 device.LEDs.AsParallel().ForAll(a => a.Device = device);
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged += LED_IntensityChanged);
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
@@ -748,12 +768,13 @@ namespace LED_Controller
         private async void GetDevices()
         {
             //Devices.Clear();
+            Log("GetDevices() called");
 
             int devicecount = BioLEDInterface.MTUSB_BLSDriverInitDevices();
 
             //snackbar.MessageQueue.Enqueue("Get Devices");
 
-            Debug.Print("There are {0} BioLED devices", devicecount);
+            Log(string.Format("{0} BioLED devices could be found (BioLEDInterface.MTUSB_BLSDriverInitDevices())", devicecount));
 
             if (devicecount == 0)
             {
@@ -765,7 +786,7 @@ namespace LED_Controller
             {
                 int result = BioLEDInterface.MTUSB_BLSDriverOpenDevice(i);
 
-                Debug.Print("Device # {0} OPEN called, return = {1}", i, result);
+                Log(string.Format("Device # {0} OPEN called, return = {1}", i, result));
                 //MessageBox.Show(string.Format("Device # {0} OPEN called, return = {1}", i, result));
 
                 if (result > -1)
@@ -781,7 +802,7 @@ namespace LED_Controller
 
                     int channelcount = BioLEDInterface.MTUSB_BLSDriverGetChannels(device.DeviceHandle);
 
-                    Debug.Print("MTUSB_BLSDriverGetChannels returned {0}", channelcount);
+                    Log(string.Format("MTUSB_BLSDriverGetChannels returned {0}", channelcount));
                     //MessageBox.Show(string.Format("MTUSB_BLSDriverGetChannels returned {0}", channelcount));
 
                     device.ChannelCount = channelcount;
@@ -792,10 +813,12 @@ namespace LED_Controller
                     {
                         //Device already present (ie. was loaded from the Settings File), therefore simply update its status to IsConnected
                         this.Devices.First(a => a.SerialNumber == device.SerialNumber).IsConnected = true;
+                        Log(string.Format("Device {0} found", device.SerialNumber));
                     }
                     else
                     {
                         Devices.Add(device);
+                        Log("Device (new) added");
                     }
                     HasDevices = Devices.Count > 0;
                 }
@@ -841,8 +864,6 @@ namespace LED_Controller
         private void Send_LEDIntensity(LED LED, double Value)
         {
 
-            Debug.Print("Send_LEDIntensity::    {0} (sending value:{1})", LED.DeviceDetailString, (int)Math.Floor(LED.Intensity * 10));
-
             if (LED.Mode == LEDModeEnum.Disabled)
             {
                 _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
@@ -850,18 +871,19 @@ namespace LED_Controller
             }
             else
             {
-
                 if (LED.Mode == LEDModeEnum.Constant)
                 {
                     if (LED.IsOn == false)
                     {
                         //LED is OFF, send 0 Intensity
                         _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0);
+                        Log("Send_LEDIntensity:   {0} LED is OFF (sending value:0)", LED.DeviceDetailString);
                         return;
                     }
                     else
                     {
                         _ = BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10));
+                        Log(string.Format("Send_LEDIntensity:    {0} (sending value:{1})", LED.DeviceDetailString, (int)Math.Floor(LED.Intensity * 10)));
                     }
                 }
                 if (LED.Mode == LEDModeEnum.Follower)
@@ -870,11 +892,14 @@ namespace LED_Controller
                     {
                         //LED is OFF, send 0 Intensity
                         _ = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, 0, 0);
+                        Log("Send_LEDIntensity:    {0} LED is OFF (sending value:0)", LED.DeviceDetailString);
                         return;
                     }
                     else
                     {
                         _ = BioLEDInterface.MTUSB_BLSDriverSetFollowModeDetail(LED.Device.DeviceHandle, LED.DeviceChannelIndex, (int)Math.Floor(LED.Intensity * 10), (int)Math.Floor(LED.OffIntensity * 10));
+                        Log(string.Format("Send_LEDIntensity:    {0} (sending value:{1})", LED.DeviceDetailString, (int)Math.Floor(LED.Intensity * 10)));
+
                     }
                 if (LED.Mode == LEDModeEnum.Pulse)
                     DialogHost.Show(this.Resources["DIALOG_NotImplemented"]);
@@ -1066,6 +1091,32 @@ namespace LED_Controller
             Debug.Print("CollectionViewSource_Filter");
             var led = e.Item as LED;
             e.Accepted = IsCompactMode ? led.IsFavourite : true;
+        }
+
+        #endregion
+
+        #region Logging
+
+        public ObservableCollection<string> Logs
+        {
+            get { return (ObservableCollection<string>)GetValue(LogsProperty); }
+            set { SetValue(LogsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Logs.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LogsProperty =
+            DependencyProperty.Register("Logs", typeof(ObservableCollection<string>), typeof(MainWindow), new PropertyMetadata(new ObservableCollection<string>()));
+
+
+        private void Log(string Message)
+        {
+            this.Logs.Add(string.Format("{0}:\t{1}", Logs.Count, Message));
+            Debug.Print("Log: {0}", Message);
+        }
+
+        private void Log(string Format, params object[] p)
+        {
+            Log(string.Format(Format, p));
         }
 
         #endregion
