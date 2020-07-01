@@ -763,6 +763,11 @@ namespace LED_Controller
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
                 device.LEDs.AsParallel().ForAll(a => a.ModeChanged += LED_ModeChanged);
             }
+
+            foreach (LED led in device.LEDs)
+            {
+                BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
+            }
         }
 
         private async void GetDevices()

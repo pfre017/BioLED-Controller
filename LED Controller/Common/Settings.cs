@@ -19,5 +19,7 @@ namespace LED_Controller.Common
         public string COMPort { get; set; }
         public bool IsCompactMode { get; set; }
         public bool IsDarkUIMode { get; set; }
+
+        public List<double> PresetIntensities { get; set; }
     }
 }
