@@ -21,5 +21,14 @@ namespace LED_Controller.Common
         public bool IsDarkUIMode { get; set; }
 
         public List<double> PresetIntensities { get; set; }
+
+        public IEnumerable<double> DefaultPresetIntensities
+        {
+            get
+            {
+                return DefaultPresetIntensities_;
+            }
+        }
+        private List<double> DefaultPresetIntensities_ = new List<double>() { 1, 2, 5, 10, 20, 50, 100 };
     }
 }

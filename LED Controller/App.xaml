@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="SampleData.xaml" ></ResourceDictionary>
                 <ResourceDictionary Source="Dialogs.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            
             <ObjectDataProvider x:Key="LEDModes"
                       MethodName="GetValues"
                       ObjectType="{x:Type sys:Enum}">
@@ -33,86 +34,92 @@
 
             <Style TargetType="{x:Type Rectangle}" ></Style>
 
+            <Style x:Key="PresetIntensityStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+                <!--DIFFICULTY GETTING ACCESS TO TAG ON THE BUTTON-->
+                <Setter Property="Margin" Value="3,2"></Setter>
+                <Setter Property="Padding" Value="10,1"></Setter>
+            </Style>
+
             <DataTemplate DataType="{x:Type LEDControllerCommon:LED}" >
                 <md:Card Padding="15">
                     <!--<Border Grid.RowSpan="99" Grid.ColumnSpan="99" CornerRadius="10" BorderThickness="1" Padding="15" BorderBrush="{StaticResource MaterialDesignLightForeground}">-->
-                        <Grid >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="40"></ColumnDefinition>
-                                <ColumnDefinition Width="200"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <md:ColorZone Grid.Column="0" Background="{Binding Fill}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Opacity="0.5"></md:ColorZone>
-                            <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="2" Grid.Row="0">
-                                <TextBlock Text="{Binding DeviceChannelIndex, StringFormat='#{0}'}"  Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center" ></TextBlock>
-                                <md:PackIcon Kind="LanConnect" Visibility="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center">
-                                    <md:PackIcon.ToolTip>
-                                        <ToolTip>
-                                            <TextBlock Text="{Binding LinkedAnalogueChannelName, StringFormat='Linked to Arduino Analogue Channel {0}'}"></TextBlock>
-                                        </ToolTip>
-                                    </md:PackIcon.ToolTip>
-                                </md:PackIcon>
-                                <TextBlock Text="{Binding Wavelength, StringFormat='{}{0} nm'}" Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                                    <TextBlock.LayoutTransform>
-                                        <RotateTransform Angle="270"></RotateTransform>
-                                    </TextBlock.LayoutTransform>
-                                </TextBlock>
-                                <!--<md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <md:ColorZone Grid.Column="0" Background="{Binding Fill}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Opacity="0.5"></md:ColorZone>
+                        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="2" Grid.Row="0">
+                            <TextBlock Text="{Binding DeviceChannelIndex, StringFormat='#{0}'}"  Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center" ></TextBlock>
+                            <md:PackIcon Kind="LanConnect" Visibility="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center">
+                                <md:PackIcon.ToolTip>
+                                    <ToolTip>
+                                        <TextBlock Text="{Binding LinkedAnalogueChannelName, StringFormat='Linked to Arduino Analogue Channel {0}'}"></TextBlock>
+                                    </ToolTip>
+                                </md:PackIcon.ToolTip>
+                            </md:PackIcon>
+                            <TextBlock Text="{Binding Wavelength, StringFormat='{}{0} nm'}" Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                <TextBlock.LayoutTransform>
+                                    <RotateTransform Angle="270"></RotateTransform>
+                                </TextBlock.LayoutTransform>
+                            </TextBlock>
+                            <!--<md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
                                      ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>-->
-                            </StackPanel>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                            <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
                             ToolTip="Turn LED ON/OFF">
-                                    <ToggleButton.Content>
-                                        <md:PackIcon Kind="LightbulbOffOutline" Height="40" Width="40"></md:PackIcon>
-                                    </ToggleButton.Content>
-                                    <md:ToggleButtonAssist.OnContent>
-                                        <md:PackIcon Kind="LightbulbOnOutline" Height="40" Width="40"></md:PackIcon>
-                                    </md:ToggleButtonAssist.OnContent>
-                                </ToggleButton>
-                                <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right"
+                                <ToggleButton.Content>
+                                    <md:PackIcon Kind="LightbulbOffOutline" Height="40" Width="40"></md:PackIcon>
+                                </ToggleButton.Content>
+                                <md:ToggleButtonAssist.OnContent>
+                                    <md:PackIcon Kind="LightbulbOnOutline" Height="40" Width="40"></md:PackIcon>
+                                </md:ToggleButtonAssist.OnContent>
+                            </ToggleButton>
+                            <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right"
                    Grid.Row="0" Grid.Column="1" Background="Transparent" Margin="10,10" VerticalAlignment="Center">
-                                    <TextBox.Text>
-                                        <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <LEDControllerCommon:LedRangeRule ></LEDControllerCommon:LedRangeRule>
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox.Text>
-                                </TextBox>
-                            </StackPanel>
-                            <ComboBox SelectedItem="{Binding Mode}"  Grid.Row="1" Grid.Column="1"
+                                <TextBox.Text>
+                                    <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <LEDControllerCommon:LedRangeRule ></LEDControllerCommon:LedRangeRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                        <ComboBox SelectedItem="{Binding Mode}"  Grid.Row="1" Grid.Column="1"
                   ItemsSource="{Binding Source={StaticResource LEDModes}}" VerticalAlignment="Center" Margin="10,5">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate >
-                                        <TextBlock Text="{Binding }" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <StackPanel Grid.Column="2" Grid.RowSpan="2" >
-                                <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}"
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding }" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Grid.Column="2" Grid.RowSpan="2" >
+                            <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}"
                         HorizontalAlignment="Stretch" VerticalAlignment="Top" ToolTip="Preset Intensities" x:Name="ShowPresetIntensitiesToggle">
-                                    <ToggleButton.LayoutTransform >
-                                        <ScaleTransform ScaleX="0.75" ScaleY="0.75"></ScaleTransform>
-                                    </ToggleButton.LayoutTransform>
-                                    <md:PackIcon Kind="ChevronRight"></md:PackIcon>
-                                    <md:ToggleButtonAssist.OnContent>
-                                        <md:PackIcon Kind="ChevronLeft"></md:PackIcon>
-                                    </md:ToggleButtonAssist.OnContent>
-                                </ToggleButton>
-                                <Button Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}" Margin="0,8"
+                                <ToggleButton.LayoutTransform >
+                                    <ScaleTransform ScaleX="0.75" ScaleY="0.75"></ScaleTransform>
+                                </ToggleButton.LayoutTransform>
+                                <md:PackIcon Kind="ChevronRight"></md:PackIcon>
+                                <md:ToggleButtonAssist.OnContent>
+                                    <md:PackIcon Kind="ChevronLeft"></md:PackIcon>
+                                </md:ToggleButtonAssist.OnContent>
+                            </ToggleButton>
+                            <Button Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}" Margin="0,8"
                       Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
                       CommandParameter="{Binding }"
                       Style="{StaticResource MaterialDesignIconButton}" >
-                                    <md:PackIcon Kind="Pencil" />
-                                </Button>
-                                <!--<ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" IsChecked="{Binding IsFavourite}" Margin="4,4"
+                                <md:PackIcon Kind="Pencil" />
+                            </Button>
+                            <!--<ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" IsChecked="{Binding IsFavourite}" Margin="4,4"
                                           ToolTip="Make LED Favourite">
                                 <ToggleButton.Content>
                                     <md:PackIcon Kind="StarBorder" Width="30"></md:PackIcon>
@@ -121,30 +128,27 @@
                                     <md:PackIcon Kind="Star" Width="30"></md:PackIcon>
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>-->
-                            </StackPanel>
-                            <WrapPanel Orientation="Horizontal" MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
-                           Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}">
-                                <WrapPanel.Resources>
-                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
-                                        <!--DIFFICULTY GETTING ACCESS TO TAG ON TEH BUTTON-->
-                                        <Setter Property="Margin" Value="3,2"></Setter>
-                                        <Setter Property="Padding" Value="10,1"></Setter>
-                                    </Style>
-                                </WrapPanel.Resources>
-                                <Button Tag="0" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">OFF</Button>
-                                <Button Tag="1" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">1%</Button>
-                                <Button Tag="2" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">2%</Button>
-                                <Button Tag="5" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">5%</Button>
-                                <Button Tag="10" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">10%</Button>
-                                <Button Tag="20" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">20%</Button>
-                                <Button Tag="50" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">50%</Button>
-                                <Button Tag="100" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">100%</Button>
-                            </WrapPanel>
-                            <md:ColorZone Mode="Accent" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
+                        </StackPanel>
+                        <WrapPanel Orientation="Horizontal" MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
+                                Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}">
+                            <WrapPanel.Resources>
+                                <Style TargetType="Button" BasedOn="{StaticResource PresetIntensityStyle}"></Style>
+                            </WrapPanel.Resources>
+
+                            <Button Tag="0" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">OFF</Button>
+                            <Button Tag="1" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">1%</Button>
+                            <Button Tag="2" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">2%</Button>
+                            <Button Tag="5" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">5%</Button>
+                            <Button Tag="10" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">10%</Button>
+                            <Button Tag="20" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">20%</Button>
+                            <Button Tag="50" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">50%</Button>
+                            <Button Tag="100" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">100%</Button>
+                        </WrapPanel>
+                        <md:ColorZone Mode="Accent" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
                           Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
-                                <TextBlock Text="DISCONNECTED" HorizontalAlignment="Center"></TextBlock>
-                            </md:ColorZone>
-                        </Grid>
+                            <TextBlock Text="DISCONNECTED" HorizontalAlignment="Center"></TextBlock>
+                        </md:ColorZone>
+                    </Grid>
                     <!--</Border>-->
                 </md:Card>
             </DataTemplate>

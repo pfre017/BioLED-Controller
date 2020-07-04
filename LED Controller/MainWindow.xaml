@@ -61,6 +61,8 @@
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+
                             </Grid.RowDefinitions>
                             <Button Click="Connect_Click" Grid.Row="0">Scan for Devices</Button>
                             <md:PackIcon Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -73,13 +75,15 @@
                             <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsDarkUIMode}" Grid.Row="2" HorizontalAlignment="Right"></ToggleButton>
                             <TextBlock Text="Compact Mode" Grid.Row="3" Margin="16,15"></TextBlock>
                             <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsCompactMode}" Grid.Row="3" HorizontalAlignment="Right"></ToggleButton>
-                            <Separator Grid.Row="4"></Separator>
-                            <Button Click="About_Click" Grid.Row="5">About</Button>
-                            <md:PackIcon Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            <Button Click="PresetIntensities_Click" Grid.Row="4">Preset Intensities</Button>
+                            <md:PackIcon Kind="Numbers" Grid.Row="4" HorizontalAlignment="Right" Margin="20 0 16 0" Width="25" Height="25" VerticalAlignment="Center"></md:PackIcon>
+                            <Separator Grid.Row="5"></Separator>
+                            <Button Click="About_Click" Grid.Row="6">About</Button>
+                            <md:PackIcon Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center"
                                          Width="25" Height="25"
 							        Margin="20 0 16 0"
 							        Kind="Help" />
-                            <Button Click="Exit_Click" Grid.Row="6">Exit</Button>
+                            <Button Click="Exit_Click" Grid.Row="7">Exit</Button>
                         </Grid>
                     </md:PopupBox>
                     <TextBlock  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="LED Controller" Margin="10,5" VerticalAlignment="Center" DockPanel.Dock="Left"></TextBlock>

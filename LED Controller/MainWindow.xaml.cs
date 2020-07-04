@@ -55,6 +55,19 @@ namespace LED_Controller
 
         #region Dependency Properties
 
+
+
+        public ObservableCollection<double> PresetIntensities
+        {
+            get { return (ObservableCollection<double>)GetValue(PresetIntensitiesProperty); }
+            set { SetValue(PresetIntensitiesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PresetIntensities.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PresetIntensitiesProperty =
+            DependencyProperty.Register("PresetIntensities", typeof(ObservableCollection<double>), typeof(MainWindow), new PropertyMetadata(null));
+
+
         public bool IsDarkUIMode
         {
             get { return (bool)GetValue(IsDarkUIModeProperty); }
@@ -633,6 +646,7 @@ namespace LED_Controller
             s.COMPort = string.IsNullOrWhiteSpace(this.SelectedCOMPort) ? this.Settings.COMPort : this.SelectedCOMPort;
             s.IsCompactMode = this.IsCompactMode;
             s.IsDarkUIMode = this.IsDarkUIMode;
+            s.PresetIntensities = this.PresetIntensities?.ToList();
 
             serializer.Serialize(writer, s);
 
@@ -708,9 +722,17 @@ namespace LED_Controller
                 }
             }
 
+            if (this.Settings.PresetIntensities == null)
+                this.Settings.PresetIntensities = Settings.DefaultPresetIntensities.ToList();       //default Preset Intensities
+            else if (this.Settings.PresetIntensities.Count == 0)
+                this.Settings.PresetIntensities = Settings.DefaultPresetIntensities.ToList();       //default Preset Intensities
+
+
+
             this.SelectedDevice = Devices.FirstOrNullObject(null);
             this.IsDarkUIMode = Settings.IsDarkUIMode;
             this.IsCompactMode = Settings.IsCompactMode;
+            this.PresetIntensities = new ObservableCollection<double>(Settings.PresetIntensities);
         }
 
         private string settingsfilename = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings";
@@ -762,12 +784,13 @@ namespace LED_Controller
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged += LED_IntensityChanged);
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged += LED_IsOnChanged);
                 device.LEDs.AsParallel().ForAll(a => a.ModeChanged += LED_ModeChanged);
+
+                foreach (LED led in device.LEDs)
+                {
+                    BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
+                }
             }
 
-            foreach (LED led in device.LEDs)
-            {
-                BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
-            }
         }
 
         private async void GetDevices()
@@ -1066,7 +1089,6 @@ namespace LED_Controller
             Devices.Clear();
             Devices.Add(new BioLEDDevice(100) { ChannelCount = 4, SerialNumber = "DEMO DEVICE", IsConnected = true });
             HasDevices = Devices.Count > 0;
-
             return;
         }
 
@@ -1081,15 +1103,13 @@ namespace LED_Controller
             var result = await DialogHost.Show(o);
         }
 
-        //private void DarkToggleButton_Checked(object sender, RoutedEventArgs e)
-        //{
-        //    new PaletteHelper().SetLightDark(true);
-        //}
+        private async void PresetIntensities_Click(object sender, RoutedEventArgs e)
+        {
+            object o = App.Current.Resources["DIALOG_PresetIntensities"];
 
-        //private void DarkToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        //{
-        //    new PaletteHelper().SetLightDark(false);
-        //}
+            ((FrameworkElement)o).DataContext = this.PresetIntensities;
+            var result = await DialogHost.Show(o);
+        }
 
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
         {
@@ -1125,5 +1145,6 @@ namespace LED_Controller
         }
 
         #endregion
+
     }
 }

@@ -48,7 +48,6 @@ namespace LED_Controller
             {
                 Helper.Controls.Dialogs.ExceptionViewer ev = new Helper.Controls.Dialogs.ExceptionViewer("An unexpected error occured in PresetIntensity_Click", ex, this.MainWindow);
             }
-
         }
 
 

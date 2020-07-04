@@ -287,7 +287,6 @@
     <Resource Include="Icons\appbar.connect.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Helper.dll" />
     <Content Include="HIDDLL.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
