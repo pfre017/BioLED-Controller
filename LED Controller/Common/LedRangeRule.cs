@@ -12,7 +12,9 @@ namespace LED_Controller.Common
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            
+            if (value == null)
+                return new ValidationResult(false, "Value cannot null");
+
             if (Int32.TryParse(new String(((string)value).Where(Char.IsDigit).ToArray()), out int intensity) == false)
                 return new ValidationResult(false, "Value could not be parsed to an integer");
 

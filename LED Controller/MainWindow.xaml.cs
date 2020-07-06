@@ -186,41 +186,6 @@ namespace LED_Controller
         public static readonly DependencyProperty ShutterButtonTextProperty =
             DependencyProperty.Register("ShutterButtonText", typeof(string), typeof(MainWindow), new PropertyMetadata("Open Shutter"));
 
-
-        // Using a DependencyProperty as the backing store for ShowHiddenLEDs.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty ShowFavouriteLEDsOnlyProperty =
-        //    DependencyProperty.Register("ShowFavouriteLEDsOnly", typeof(bool), typeof(MainWindow), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.None, RefreshLEDViewSource));
-
-        //private static void RefreshLEDViewSource(DependencyObject o, DependencyPropertyChangedEventArgs e)
-        //{
-        //    MainWindow mw = (MainWindow)o;
-        //    DialogHost.Show(mw.Resources["DIALOG_NotImplemented"]);
-        //    ((CollectionViewSource)mw.Resources["LEDViewSource"]).View.Refresh();
-        //}
-
-
-        //public bool ShowDisconnectedLEDs
-        //{
-        //    get { return (bool)GetValue(ShowDisconnectedLEDsProperty); }
-        //    set { SetValue(ShowDisconnectedLEDsProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for ShowDisconnectedLEDs.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty ShowDisconnectedLEDsProperty =
-        //    DependencyProperty.Register("ShowDisconnectedLEDs", typeof(bool), typeof(MainWindow), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None, RefreshLEDViewSource));
-
-
-
-        //public ObservableCollection<LED> AvailableLEDs
-        //{
-        //    get { return (ObservableCollection<LED>)GetValue(AvailableLEDsProperty); }
-        //    set { SetValue(AvailableLEDsProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for AvailableLEDs.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty AvailableLEDsProperty =
-        //    DependencyProperty.Register("AvailableLEDs", typeof(ObservableCollection<LED>), typeof(MainWindow), new PropertyMetadata(null));
-
         public Settings Settings
         {
             get { return (Settings)GetValue(SettingsProperty); }
@@ -243,35 +208,9 @@ namespace LED_Controller
 
         private static void OnDevicesChanged(object o, DependencyPropertyChangedEventArgs e)
         {
-            //MainWindow mw = (MainWindow)o;
 
-            //mw.Devices.CollectionChanged += Devices_CollectionChanged1;
-
-            //var devices = e.NewValue as ObservableCollection<BioLEDDevice>;
-            //var old_devices = e.OldValue as ObservableCollection<BioLEDDevice>;
-            //if (old_devices != null)
-            //{
-            //    old_devices.CollectionChanged -= Devices_CollectionChanged;
-            //}
-            //if (devices != null)
-            //{
-            //    devices.CollectionChanged += Devices_CollectionChanged;
-            //}
         }
 
-        //private static void Devices_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        //{
-
-        //    MainWindow mw = (MainWindow)sender;
-        //    mw.HasDevices = mw.Devices.Count > 0;
-
-        //}
-
-        //private static void Devices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        //{
-        //    MainWindow mw = (MainWindow)sender;
-        //    mw.HasDevices = mw.Devices.Count > 0;
-        //}
 
         public bool HasDevices
         {
@@ -657,8 +596,7 @@ namespace LED_Controller
 
         private void LoadSettings()
         {
-
-            Debug.Print("Settings Filename: {0}", settingsfilename);
+            Log("LoadSettings() called Filename: {0}", settingsfilename);
 
             XmlReader reader = null;
             try
@@ -668,9 +606,10 @@ namespace LED_Controller
 
                 this.Settings = (Settings)serializer.Deserialize(reader);
             }
-            catch
+            catch (Exception e)
             {
                 this.Settings = new Settings();
+                Log("LoadSettings() failed ({0})", e.Message);
             }
             finally
             {
@@ -727,8 +666,6 @@ namespace LED_Controller
             else if (this.Settings.PresetIntensities.Count == 0)
                 this.Settings.PresetIntensities = Settings.DefaultPresetIntensities.ToList();       //default Preset Intensities
 
-
-
             this.SelectedDevice = Devices.FirstOrNullObject(null);
             this.IsDarkUIMode = Settings.IsDarkUIMode;
             this.IsCompactMode = Settings.IsCompactMode;
@@ -736,7 +673,6 @@ namespace LED_Controller
         }
 
         private string settingsfilename = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings";
-
 
         #endregion
 
@@ -1106,14 +1042,18 @@ namespace LED_Controller
         private async void PresetIntensities_Click(object sender, RoutedEventArgs e)
         {
             object o = App.Current.Resources["DIALOG_PresetIntensities"];
+            PresetLEDIntensitiesViewModel vm = new PresetLEDIntensitiesViewModel() { PresetLEDIntensities = new ObservableCollection<double>(this.PresetIntensities.ToList()) };
+            ((FrameworkElement)o).DataContext = vm;
 
-            ((FrameworkElement)o).DataContext = this.PresetIntensities;
             var result = await DialogHost.Show(o);
+
+            this.PresetIntensities.Clear();
+            this.PresetIntensities.AddRangeUnique(vm.PresetLEDIntensities);
         }
 
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
         {
-            Debug.Print("CollectionViewSource_Filter");
+            //Debug.Print("CollectionViewSource_Filter");
             var led = e.Item as LED;
             e.Accepted = IsCompactMode ? led.IsFavourite : true;
         }

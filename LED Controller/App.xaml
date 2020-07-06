@@ -5,20 +5,20 @@
              xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
-             xmlns:HelperControls="clr-namespace:Helper.Controls;assembly=SNSHelper"
              xmlns:LEDController="clr-namespace:LED_Controller"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
                 <ResourceDictionary Source="SampleData.xaml" ></ResourceDictionary>
                 <ResourceDictionary Source="Dialogs.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <ObjectDataProvider x:Key="LEDModes"
                       MethodName="GetValues"
                       ObjectType="{x:Type sys:Enum}">
@@ -43,6 +43,13 @@
             <DataTemplate DataType="{x:Type LEDControllerCommon:LED}" >
                 <md:Card Padding="15">
                     <!--<Border Grid.RowSpan="99" Grid.ColumnSpan="99" CornerRadius="10" BorderThickness="1" Padding="15" BorderBrush="{StaticResource MaterialDesignLightForeground}">-->
+                    <md:Card.Resources>
+                        <CollectionViewSource x:Key="PLIV" Source="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=PresetIntensities}">
+                            <CollectionViewSource.SortDescriptions>
+                                <scm:SortDescription Direction="Ascending"></scm:SortDescription>
+                            </CollectionViewSource.SortDescriptions>
+                        </CollectionViewSource>
+                    </md:Card.Resources>
                     <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"></RowDefinition>
@@ -129,7 +136,26 @@
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>-->
                         </StackPanel>
-                        <WrapPanel Orientation="Horizontal" MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
+
+                        <ListBox MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
+                                Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"
+                                 ItemsSource="{Binding Source={StaticResource PLIV}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True"></WrapPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource PresetIntensityStyle}" Content="{Binding }" ContentStringFormat="{}{0}%" 
+                                            Tag="{Binding RelativeSource={RelativeSource AncestorType=md:Card}, Path=DataContext}" 
+                                            ToolTip="{Binding StringFormat='{}Set Intensity to {0}%'}"
+                                            Click="PresetIntensity_Click"></Button>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!--<WrapPanel Orientation="Horizontal" MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
                                 Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}">
                             <WrapPanel.Resources>
                                 <Style TargetType="Button" BasedOn="{StaticResource PresetIntensityStyle}"></Style>
@@ -143,7 +169,7 @@
                             <Button Tag="20" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">20%</Button>
                             <Button Tag="50" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">50%</Button>
                             <Button Tag="100" Click="PresetIntensity_Click" ToolTip="{Binding Path=Tag, RelativeSource={RelativeSource Self}, StringFormat='{}Set Intensity to {0}'}">100%</Button>
-                        </WrapPanel>
+                        </WrapPanel>-->
                         <md:ColorZone Mode="Accent" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
                           Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
                             <TextBlock Text="DISCONNECTED" HorizontalAlignment="Center"></TextBlock>

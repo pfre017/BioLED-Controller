@@ -6,8 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using LED_Controller.Common;
-
+using PixelLab.Common;
 
 namespace LED_Controller
 {
@@ -16,7 +17,6 @@ namespace LED_Controller
     /// </summary>
     public partial class App : Application
     {
-
         protected override void OnStartup(StartupEventArgs e)
         {
             this.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
@@ -41,18 +41,15 @@ namespace LED_Controller
             try
             {
                 Button b = (Button)sender;
-                LED led = (LED)Helper.Utilities.FindParent<ListBoxItem>(b).Content;
-                led.Intensity = double.Parse((string)b.Tag);
+
+                LED led = (LED)b.Tag;  //Tag is the LED
+                led.Intensity = (double)Helper.Utilities.FindParent<ListBoxItem>(b).Content;    //Content is the Intensity
             }
             catch (Exception ex)
             {
                 Helper.Controls.Dialogs.ExceptionViewer ev = new Helper.Controls.Dialogs.ExceptionViewer("An unexpected error occured in PresetIntensity_Click", ex, this.MainWindow);
             }
         }
-
-
-
-
     }
 
 

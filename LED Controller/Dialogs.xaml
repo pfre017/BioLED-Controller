@@ -6,7 +6,7 @@
                     xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
                     xmlns:HelperCommands="clr-namespace:Helper.Commands;assembly=SNSHelper"
                     xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
-                    xmlns:local="clr-namespace:LED_Controller">
+                    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
     <ResourceDictionary.MergedDictionaries>
         <!-- note you only need bring in these extra resource dictionaries when using non-default styles, so only bring them into your controls where the default style is not what you want -->
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
@@ -14,6 +14,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <HelperCommands:HelperCommands x:Key="HelperCommandsTarget"></HelperCommands:HelperCommands>
+    <LEDControllerCommon:LEDControllerCommands x:Key="LEDControlledCommandsTarget"></LEDControllerCommon:LEDControllerCommands>
     <HelperConverters:InverseBoolConverter x:Key="InverseBoolConverter"></HelperConverters:InverseBoolConverter>
 
     <ObjectDataProvider x:Key="LEDModes"
@@ -40,6 +41,13 @@
     <LEDControllerCommon:WavelengthToBrushConverter x:Key="WavelengthToBrushConverter"></LEDControllerCommon:WavelengthToBrushConverter>
 
     <StackPanel x:Key="DIALOG_PresetIntensities" Margin="20,20,20,20">
+        <StackPanel.Resources>
+            <CollectionViewSource x:Key="PresetLEDIntensitiesView" Source="{Binding PresetLEDIntensities}">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription Direction="Ascending"></scm:SortDescription>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+        </StackPanel.Resources>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -49,20 +57,29 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Preset LED Intensities" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Grid.Row="0"></TextBlock>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
-                <Button Margin="10,5,0,5" >
-                    <Button.CommandParameter>
-                        <sys:Boolean >False</sys:Boolean>
-                    </Button.CommandParameter>
+                <TextBox x:Name="PresetLEDIntensityTextBox" Width="50">
+                    <TextBox.Text>
+                        <Binding Path="NewPresetLEDIntensityValue" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <LEDControllerCommon:LedRangeRule ValidatesOnTargetUpdated="True"></LEDControllerCommon:LedRangeRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Button Margin="10,5,0,5" 
+                        CommandTarget="{StaticResource LEDControlledCommandsTarget}"
+                        CommandParameter="{Binding }"
+                        Command="{x:Static LEDControllerCommon:LEDControllerCommands.AddPresetLEDIntensityCommand}" ToolTip="Add Preset LED Intensity">
                     <md:PackIcon Kind="Add"></md:PackIcon>
                 </Button>
-                <Button Margin="10,5,0,5" >
-                    <Button.CommandParameter>
-                        <sys:Boolean >False</sys:Boolean>
-                    </Button.CommandParameter>
+                <Button Margin="10,5,0,5" 
+                        CommandTarget="{StaticResource LEDControlledCommandsTarget}"
+                        CommandParameter="{Binding }"
+                        Command="{x:Static LEDControllerCommon:LEDControllerCommands.RemovePresetLEDIntensityCommand}" ToolTip="Remove Selected Preset LED Intensity">
                     <md:PackIcon Kind="Remove"></md:PackIcon>
                 </Button>
             </StackPanel>
-            <ListBox Grid.Row="2" ItemsSource="{Binding }" Height="200" HorizontalAlignment="Stretch">
+            <ListBox Grid.Row="2" ItemsSource="{Binding Source={StaticResource PresetLEDIntensitiesView}}" SelectedItem="{Binding SelectedLEDItensity}" Height="200" MaxWidth="400" HorizontalAlignment="Stretch">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel IsItemsHost="True"></WrapPanel>
