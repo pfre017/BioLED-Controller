@@ -1034,7 +1034,7 @@ namespace LED_Controller
 
             AboutViewModel vm = new AboutViewModel();
             vm.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            vm.SettingsFolder = System.IO.Path.GetDirectoryName(settingsfilename);
+            vm.SettingsFilename = settingsfilename;
             ((FrameworkElement)o).DataContext = vm;
             var result = await DialogHost.Show(o);
         }

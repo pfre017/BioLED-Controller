@@ -35,7 +35,8 @@
     <Style x:Key="PresetIntensityStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
         <!--DIFFICULTY GETTING ACCESS TO TAG ON THE BUTTON-->
         <Setter Property="Margin" Value="3,2"></Setter>
-        <Setter Property="Padding" Value="10,1"></Setter>
+        <Setter Property="Padding" Value="8,1"></Setter>
+        <Setter Property="ContentStringFormat" Value="{}{0}%" ></Setter>
     </Style>
 
     <LEDControllerCommon:WavelengthToBrushConverter x:Key="WavelengthToBrushConverter"></LEDControllerCommon:WavelengthToBrushConverter>
@@ -57,7 +58,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Preset LED Intensities" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Grid.Row="0"></TextBlock>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
-                <TextBox x:Name="PresetLEDIntensityTextBox" Width="50">
+                <TextBox x:Name="PresetLEDIntensityTextBox" Width="50" VerticalAlignment="Bottom">
                     <TextBox.Text>
                         <Binding Path="NewPresetLEDIntensityValue" UpdateSourceTrigger="LostFocus">
                             <Binding.ValidationRules>
@@ -115,6 +116,7 @@
                 <Setter Property="Margin" Value="0 8 0 8" />
             </Style>
         </StackPanel.Resources>
+        <TextBlock Text="Edit LED" Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
 
         <TextBox  md:HintAssist.Hint="Device Channel #" md:HintAssist.IsFloating="True">
             <TextBox.Text>
@@ -162,7 +164,7 @@
               md:HintAssist.Hint="Mode" md:HintAssist.IsFloating="True" Style="{DynamicResource MaterialDesignFloatingHintComboBox}"></ComboBox>
         <!--<TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
                                  Text="{Binding Intensity, Delay=200}" Grid.Row="2" Grid.Column="1" Background="Transparent"></TextBox>-->
-        <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" FontSize="20" FontWeight="Medium"
+        <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}"
              md:HintAssist.Hint="Intensity"
              md:HintAssist.IsFloating="True"
              Background="Transparent">
@@ -232,7 +234,7 @@
             </md:ColorZone>
             <TextBlock Text="Peter S Freestone 2018" Margin="10" Grid.Row="1" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
             <TextBlock Text="{Binding Version}" Grid.Row="2" Margin="10" Style="{StaticResource MaterialDesignBody1TextBlock}"></TextBlock>
-            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="HelperCommands:HelperCommands.OpenFolderCommand" Grid.Row="3" CommandParameter="{Binding SettingsFolder}" CommandTarget="{StaticResource HelperCommandsTarget}" IsDefault="True">
+            <Button Command="HelperCommands:HelperCommands.OpenFolderCommand" Grid.Row="3" CommandParameter="{Binding SettingsFilename}" CommandTarget="{StaticResource HelperCommandsTarget}" IsDefault="True">
                 Open Settings Folder
             </Button>
             <StackPanel Orientation="Horizontal" Grid.Row="99"  HorizontalAlignment="Right"  Margin="10,2, 0, 2">
@@ -258,8 +260,7 @@
                 <Setter Property="Margin" Value="0 8 0 8" />
             </Style>
         </StackPanel.Resources>
-
-
+        <TextBlock Text="Arduino Controller" Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
         <ComboBox ItemsSource="{Binding COMPorts}"
                               SelectedItem="{Binding SelectedCOMPort}" md:HintAssist.Hint="COM Port"></ComboBox>
         <ComboBox ItemsSource="{Binding BaudRates}" SelectedItem="{Binding SelectedBaudRate}"

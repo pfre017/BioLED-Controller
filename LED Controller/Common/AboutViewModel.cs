@@ -9,6 +9,6 @@ namespace LED_Controller.Common
     public class AboutViewModel
     {
         public Version Version { get; set; }
-        public string SettingsFolder { get; set;  }
+        public string SettingsFilename { get; set; }
     }
 }
