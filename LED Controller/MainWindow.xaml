@@ -18,8 +18,10 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
-        TextElement.FontSize="14"
-        FontFamily="{md:MaterialDesignFont }">
+        TextElement.FontSize="14">
+    <Window.FontFamily>
+        <md:MaterialDesignFont></md:MaterialDesignFont>
+    </Window.FontFamily>
     <Window.Resources>
         <CollectionViewSource x:Key="FavouriteLEDs" Source="{Binding SelectedDevice.LEDs}" Filter="CollectionViewSource_Filter" IsLiveFilteringRequested="True">
             <CollectionViewSource.LiveFilteringProperties>
