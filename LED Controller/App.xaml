@@ -1,41 +1,36 @@
 ﻿<Application x:Class="LED_Controller.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml"
              xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
              xmlns:LEDController="clr-namespace:LED_Controller"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <md:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Pink"
+                                 ColorAdjustment="{md:ColorAdjustment}" x:Name="bundledtheme"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
                 <ResourceDictionary Source="SampleData.xaml" ></ResourceDictionary>
                 <ResourceDictionary Source="Dialogs.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-
             <ObjectDataProvider x:Key="LEDModes"
-                      MethodName="GetValues"
-                      ObjectType="{x:Type sys:Enum}">
+           MethodName="GetValues"
+           ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="LEDControllerCommon:LEDModeEnum"></x:Type>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <HelperConverters:NullToVisibilityConverter x:Key="NullVisibilityConverter" VisibilityWhenNull="Collapsed"></HelperConverters:NullToVisibilityConverter>
-            <HelperConverters:InverseBoolConverter x:Key="InverseBoolConverter"></HelperConverters:InverseBoolConverter>
             <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter"></BooleanToVisibilityConverter>
             <HelperConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolVisibilityConverter"></HelperConverters:InverseBoolToVisibilityConverter>
-
-            <Style TargetType="{x:Type Rectangle}" ></Style>
+            <HelperConverters:InverseBoolConverter x:Key="InverseBoolConverter"></HelperConverters:InverseBoolConverter>
 
             <Style x:Key="PresetIntensityStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
-                <!--DIFFICULTY GETTING ACCESS TO TAG ON THE BUTTON-->
                 <Setter Property="Margin" Value="3,2"></Setter>
                 <Setter Property="Padding" Value="10,1"></Setter>
             </Style>
@@ -76,12 +71,12 @@
                                     <RotateTransform Angle="270"></RotateTransform>
                                 </TextBlock.LayoutTransform>
                             </TextBlock>
-                            <!--<md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
-                                     ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>-->
+                            <md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                          ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                            <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
-                            ToolTip="Turn LED ON/OFF">
+                            <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" md:ColorZoneAssist.Mode="SecondaryMid" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
+                 ToolTip="Turn LED ON/OFF">
                                 <ToggleButton.Content>
                                     <md:PackIcon Kind="LightbulbOffOutline" Height="40" Width="40"></md:PackIcon>
                                 </ToggleButton.Content>
@@ -89,8 +84,8 @@
                                     <md:PackIcon Kind="LightbulbOnOutline" Height="40" Width="40"></md:PackIcon>
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>
-                            <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right"
-                   Grid.Row="0" Grid.Column="1" Background="Transparent" Margin="10,10" VerticalAlignment="Center">
+                            <TextBox IsEnabled="{Binding IsLinkedToAnalogueChannel, Converter={StaticResource InverseBoolConverter}}" Width="100" FontSize="20" FontWeight="Medium" HorizontalAlignment="Right" md:TextFieldAssist.SuffixText="%"
+        Grid.Row="0" Grid.Column="1" Background="Transparent" Margin="10,10" VerticalAlignment="Center">
                                 <TextBox.Text>
                                     <Binding Path="Intensity" Delay="200" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
@@ -101,7 +96,7 @@
                             </TextBox>
                         </StackPanel>
                         <ComboBox SelectedItem="{Binding Mode}"  Grid.Row="1" Grid.Column="1"
-                  ItemsSource="{Binding Source={StaticResource LEDModes}}" VerticalAlignment="Center" Margin="10,5">
+       ItemsSource="{Binding Source={StaticResource LEDModes}}" VerticalAlignment="Center" Margin="10,5">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate >
                                     <TextBlock Text="{Binding }" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
@@ -110,7 +105,7 @@
                         </ComboBox>
                         <StackPanel Grid.Column="2" Grid.RowSpan="2" >
                             <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Top" ToolTip="Preset Intensities" x:Name="ShowPresetIntensitiesToggle">
+             HorizontalAlignment="Stretch" VerticalAlignment="Top" ToolTip="Preset Intensities" x:Name="ShowPresetIntensitiesToggle">
                                 <ToggleButton.LayoutTransform >
                                     <ScaleTransform ScaleX="0.75" ScaleY="0.75"></ScaleTransform>
                                 </ToggleButton.LayoutTransform>
@@ -120,16 +115,16 @@
                                 </md:ToggleButtonAssist.OnContent>
                             </ToggleButton>
                             <Button Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}" Margin="0,8"
-                      Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
-                      CommandParameter="{Binding }"
-                      Style="{StaticResource MaterialDesignIconButton}" >
+                                   Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
+                                   CommandParameter="{Binding }"
+                                   Style="{StaticResource MaterialDesignIconButton}" >
                                 <md:PackIcon Kind="Pencil" />
                             </Button>
                         </StackPanel>
 
                         <ListBox MaxHeight="200" HorizontalAlignment="Stretch" Grid.RowSpan="2" Grid.Column="3"
-                                Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"
-                                 ItemsSource="{Binding Source={StaticResource PLIV}}">
+                     Visibility="{Binding ElementName=ShowPresetIntensitiesToggle, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"
+                      ItemsSource="{Binding Source={StaticResource PLIV}}">
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel IsItemsHost="True"></WrapPanel>
@@ -138,14 +133,14 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Button Style="{StaticResource PresetIntensityStyle}" Content="{Binding }" ContentStringFormat="{}{0}%" 
-                                            Tag="{Binding RelativeSource={RelativeSource AncestorType=md:Card}, Path=DataContext}" 
-                                            ToolTip="{Binding StringFormat='{}Set Intensity to {0}%'}"
-                                            Click="PresetIntensity_Click"></Button>
+                                 Tag="{Binding RelativeSource={RelativeSource AncestorType=md:Card}, Path=DataContext}" 
+                                 ToolTip="{Binding StringFormat='{}Set Intensity to {0}%'}"
+                                 Click="PresetIntensity_Click"></Button>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <md:ColorZone Mode="Accent" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
-                          Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                        <md:ColorZone Mode="SecondaryLight" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="99" Margin="0, 5"
+               Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
                             <TextBlock Text="DISCONNECTED" HorizontalAlignment="Center"></TextBlock>
                         </md:ColorZone>
                     </Grid>
@@ -154,7 +149,7 @@
 
             <DataTemplate x:Key="LEDIconTemplate" DataType="{x:Type LEDControllerCommon:LED}">
                 <Button Margin="2" Background="{Binding Fill}" Opacity="0.5"
-                Style="{StaticResource MaterialDesignRaisedLightButton}" >
+     Style="{StaticResource MaterialDesignRaisedLightButton}" >
                     <TextBlock Text="{Binding Wavelength}"></TextBlock>
                     <Button.ToolTip>
                         <TextBlock Text="{Binding Wavelength, StringFormat={}{0} nm}"></TextBlock>
@@ -178,31 +173,32 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="99" Grid.Row="0">
                             <TextBlock Text="{Binding DeviceHandle, StringFormat='#{0}'}"  Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center" ></TextBlock>
-                            <!--<md:PackIcon Kind="Exclamation" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
-                                     ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>-->
+                            <md:PackIcon Kind="Exclamation" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                          ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>
                         </StackPanel>
 
                         <TextBlock Text="{Binding SerialNumber}" Grid.Column="1" Grid.Row="0"  Style="{StaticResource MaterialDesignHeadline6TextBlock}" FontWeight="Black" HorizontalAlignment="Center"></TextBlock>
 
                         <ItemsControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding LEDs}" Visibility="{Binding HasLEDs, Converter={StaticResource BoolVisibilityConverter}}"
-                          ItemTemplate="{StaticResource LEDIconTemplate}">
+               ItemTemplate="{StaticResource LEDIconTemplate}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel IsItemsHost="True"></WrapPanel>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
-                        <md:ColorZone Mode="Accent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
-                          Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                        <md:ColorZone Mode="SecondaryDark" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
+               Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}">
                             <TextBlock Text="DISCONNECTED" HorizontalAlignment="Center"></TextBlock>
                         </md:ColorZone>
-                        <md:ColorZone Mode="Accent" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
-                          Visibility="{Binding HasLEDs, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                        <md:ColorZone Mode="SecondaryDark" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="99" Margin="2"
+               Visibility="{Binding HasLEDs, Converter={StaticResource InverseBoolVisibilityConverter}}">
                             <TextBlock Text="[No LEDs]" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" ></TextBlock>
                         </md:ColorZone>
                     </Grid>
                 </md:Card>
             </DataTemplate>
+           
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using LED_Controller.Common;
-using PixelLab.Common;
 
 namespace LED_Controller
 {

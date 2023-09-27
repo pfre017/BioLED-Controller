@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Diagnostics;
-using ControlzEx.Standard;
 using System.Windows.Data;
 
 namespace LED_Controller.Common

@@ -53,9 +53,16 @@ namespace LED_Controller
 
         #endregion
 
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+
+            // Begin dragging the window
+            this.DragMove();
+        }
+
         #region Dependency Properties
-
-
 
         public ObservableCollection<double> PresetIntensities
         {
@@ -80,11 +87,12 @@ namespace LED_Controller
 
         private static void OnDarkUIModeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            PaletteHelper palette = new PaletteHelper();
-            ITheme theme = palette.GetTheme();
-            IBaseTheme basetheme = (bool)e.NewValue ? new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
-            theme.SetBaseTheme(basetheme);
-            palette.SetTheme(theme);
+            BaseTheme bt = ThemeAssist.GetTheme(o);
+
+            if (((bool)e.NewValue) == true)
+                ThemeAssist.SetTheme(((MainWindow)o), BaseTheme.Dark);
+            else
+                ThemeAssist.SetTheme(((MainWindow)o), BaseTheme.Light);
         }
 
         public bool IsCompactMode
@@ -322,7 +330,6 @@ namespace LED_Controller
             ScanDevicesCommand_ = new RoutedCommand("ScanDevicesCommand", typeof(MainWindow));
             RemoveDeviceCommand_ = new RoutedCommand("RemoveDeviceCommand", typeof(MainWindow));
 
-
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(AddLEDCommand_, OnAddLED, OnQueryAddLED));
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(RemoveLEDCommand_, OnRemoveLED, OnQueryRemoveLED));
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(EditLEDCommand_, OnEditLED, OnQueryEditLED));
@@ -330,9 +337,7 @@ namespace LED_Controller
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(ConnectArduinoCommand_, OnConnectArduino, OnQueryConnectArduino));
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(ScanDevicesCommand_, OnScanDevices, OnQueryScanDevices));
             CommandManager.RegisterClassCommandBinding(typeof(MainWindow), new CommandBinding(RemoveDeviceCommand_, OnRemoveDevice, OnQueryRemoveDevice));
-
         }
-
 
         private static void OnAddLED(object o, ExecutedRoutedEventArgs e)
         {
@@ -347,7 +352,7 @@ namespace LED_Controller
                 e.CanExecute = false;
                 return;
             }
-            if (mw.SelectedDevice.LEDs.Count() < mw.SelectedDevice.ChannelCount)
+            if (mw.SelectedDevice.LEDs.Count < mw.SelectedDevice.ChannelCount)
             {
                 e.CanExecute = true;
             }
@@ -369,12 +374,12 @@ namespace LED_Controller
             if (e.Parameter is LED led)
             {
                 MainWindow mw = (MainWindow)o;
-                mw.EditLED((LED)e.Parameter);
+                mw.EditLED(led);
             }
         }
         private static void OnQueryEditLED(object o, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter is LED led)
+            if (e.Parameter is LED)
             {
                 e.CanExecute = true;
                 return;
@@ -396,7 +401,7 @@ namespace LED_Controller
         private static void OnConnectArduino(object o, ExecutedRoutedEventArgs e)
         {
             MainWindow mw = (MainWindow)o;
-            mw.ConnectMonitor_Click(null, null);
+            //mw.ConnectMonitor_Click(null, null);
         }
 
         private static void OnQueryConnectArduino(object o, CanExecuteRoutedEventArgs e)
@@ -469,16 +474,19 @@ namespace LED_Controller
 
         public async void AddLED()
         {
-            if (this.SelectedDevice.LEDs.Count() >= this.SelectedDevice.ChannelCount)
+            if (this.SelectedDevice.LEDs.Count >= this.SelectedDevice.ChannelCount)
             {
                 snackbar.MessageQueue.Enqueue("Unable to add LED. All Device Channels used");
             }
 
             object o = App.Current.Resources["DIALOG_EditLED"];
 
-            LED led = new LED() { Wavelength = 470, Device = this.SelectedDevice };
-
-            led.DeviceChannelIndex = this.SelectedDevice.LEDs.Count() + 1;
+            LED led = new LED
+            {
+                Wavelength = 470,
+                Device = this.SelectedDevice,
+                DeviceChannelIndex = this.SelectedDevice.LEDs.Count + 1
+            };
 
             ((FrameworkElement)o).DataContext = led;
 
@@ -578,14 +586,16 @@ namespace LED_Controller
             XmlWriter writer = XmlWriter.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings");
             XmlSerializer serializer = new XmlSerializer(typeof(Settings));
 
-            Settings s = new Settings();
-            s.Devices = this.Devices.ToList();
+            Settings s = new Settings
+            {
+                Devices = this.Devices.ToList(),
 
-            s.BaudRate = string.IsNullOrWhiteSpace(this.SelectedBaudRate) ? this.Settings.BaudRate : this.SelectedBaudRate;
-            s.COMPort = string.IsNullOrWhiteSpace(this.SelectedCOMPort) ? this.Settings.COMPort : this.SelectedCOMPort;
-            s.IsCompactMode = this.IsCompactMode;
-            s.IsDarkUIMode = this.IsDarkUIMode;
-            s.PresetIntensities = this.PresetIntensities?.ToList();
+                BaudRate = string.IsNullOrWhiteSpace(this.SelectedBaudRate) ? this.Settings.BaudRate : this.SelectedBaudRate,
+                COMPort = string.IsNullOrWhiteSpace(this.SelectedCOMPort) ? this.Settings.COMPort : this.SelectedCOMPort,
+                IsCompactMode = this.IsCompactMode,
+                IsDarkUIMode = this.IsDarkUIMode,
+                PresetIntensities = this.PresetIntensities?.ToList()
+            };
 
             serializer.Serialize(writer, s);
 
@@ -620,10 +630,10 @@ namespace LED_Controller
             snackbar.MessageQueue.Enqueue(string.Format("OPENED\n\n{0}", settingsfilename));
 
             this.COMPorts.Clear();
-            foreach (string port in SerialPort.GetPortNames())
-            {
-                this.COMPorts.Add(port);
-            }
+            //foreach (string port in SerialPort.GetPortNames())
+            //{
+            //    this.COMPorts.Add(port);
+            //}
 
             this.BaudRates.Clear();
 
@@ -682,10 +692,10 @@ namespace LED_Controller
         {
             SaveSettings();
 
-            if (port != null)
-            {
-                port.Close();
-            }
+            //if (port != null)
+            //{
+            //    port.Close();
+            //}
             base.OnClosing(e);
         }
 
@@ -726,7 +736,6 @@ namespace LED_Controller
                     BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
                 }
             }
-
         }
 
         private async void GetDevices()
@@ -792,7 +801,7 @@ namespace LED_Controller
         //private bool controllerpassedtest = false;
         private string controllerteststring;
 
-        public static SerialPort port;
+        //public static SerialPort port;
         private Dictionary<string, int> previousvalue = new Dictionary<string, int>();
 
         private static double MapAnalogueToPercentage(string AnalogueChannelID, int Value)
@@ -800,9 +809,6 @@ namespace LED_Controller
             //find calibration information for the given AnalogueChannelID
             double factor = (1d / 1024d);
             double offset = 0;
-
-
-            //return (double)Value * factor;
 
             return Math.Round(((Value - offset) * factor), 3);
         }
@@ -881,129 +887,129 @@ namespace LED_Controller
 
         #region Ardunio Connection
 
-        private async void ConnectMonitor_Click(object sender, RoutedEventArgs e)
-        {
+        //private async void ConnectMonitor_Click(object sender, RoutedEventArgs e)
+        //{
 
-            try
-            {
-                if (string.IsNullOrWhiteSpace(SelectedBaudRate))
-                {
-                    var result = await DialogHost.Show(App.Current.Resources["Dialog_BaudRateNotSet"]);
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(SelectedCOMPort))
-                {
-                    var result = await DialogHost.Show(App.Current.Resources["Dialog_COMPortNotSet"]);
-                    return;
-                }
+        //    try
+        //    {
+        //        if (string.IsNullOrWhiteSpace(SelectedBaudRate))
+        //        {
+        //            var result = await DialogHost.Show(App.Current.Resources["Dialog_BaudRateNotSet"]);
+        //            return;
+        //        }
+        //        if (string.IsNullOrWhiteSpace(SelectedCOMPort))
+        //        {
+        //            var result = await DialogHost.Show(App.Current.Resources["Dialog_COMPortNotSet"]);
+        //            return;
+        //        }
 
-                previousvalue.Clear();
+        //        previousvalue.Clear();
 
-                if (port != null && port.IsOpen)
-                {
-                    port.Close();
-                    port.Dispose();
-                }
+        //        if (port != null && port.IsOpen)
+        //        {
+        //            port.Close();
+        //            port.Dispose();
+        //        }
 
-                port = new SerialPort(SelectedCOMPort);
-                port.BaudRate = int.Parse(SelectedBaudRate);
-                port.DtrEnable = true;
-                port.ReadTimeout = 5000;
-                port.WriteTimeout = 500;
-                port.DataReceived += port_DataReceived;
+        //        port = new SerialPort(SelectedCOMPort);
+        //        port.BaudRate = int.Parse(SelectedBaudRate);
+        //        port.DtrEnable = true;
+        //        port.ReadTimeout = 5000;
+        //        port.WriteTimeout = 500;
+        //        port.DataReceived += port_DataReceived;
 
-                port.Open();
+        //        port.Open();
 
-                //send test string
-                controllerteststring = string.Format("TEST {0}", new Random(2).NextDouble());
+        //        //send test string
+        //        controllerteststring = string.Format("TEST {0}", new Random(2).NextDouble());
 
-                try
-                {
-                    port.WriteLine(controllerteststring);
-                    //controllerpassedtest = true;
-                }
-                catch (System.TimeoutException)
-                {
-                    var result = await DialogHost.Show(App.Current.Resources["Dialog_COMPorttTimeout"]);
+        //        try
+        //        {
+        //            port.WriteLine(controllerteststring);
+        //            //controllerpassedtest = true;
+        //        }
+        //        catch (System.TimeoutException)
+        //        {
+        //            var result = await DialogHost.Show(App.Current.Resources["Dialog_COMPorttTimeout"]);
 
-                    port.Close();
-                    port.Dispose();
-                }
-            }
-            catch (Exception ex)
-            {
-                var result = await DialogHost.Show(string.Format("Connect Arduino failed\n\n{0} {1}\n\n{2}", ex.HResult, ex.Message, ex.ToString()));
-            }
-        }
+        //            port.Close();
+        //            port.Dispose();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var result = await DialogHost.Show(string.Format("Connect Arduino failed\n\n{0} {1}\n\n{2}", ex.HResult, ex.Message, ex.ToString()));
+        //    }
+        //}
 
-        private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            //Debug.Print("port_DataReceived {0}", e.EventType);
+        //private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        //{
+        //    //Debug.Print("port_DataReceived {0}", e.EventType);
 
-            if (port.IsOpen)
-            {
-                string s = port.ReadLine();
-                if (string.IsNullOrWhiteSpace(s))
-                    return;
+        //    if (port.IsOpen)
+        //    {
+        //        string s = port.ReadLine();
+        //        if (string.IsNullOrWhiteSpace(s))
+        //            return;
 
-                //if (s == controllerteststring)
-                //    controllerpassedtest = true;
-
-
-                string ID = s.Substring(0, 2);
-
-                string valuestring = s.Substring(2).Trim();
-
-                if (valuestring.StartsWith("B"))
-                {
-                    Debug.Print("ID: {0}, button state: {1}", ID, valuestring);
-                    LED led = Dispatcher.Invoke(new Func<LED>(delegate
-                    {
-                        LED result = SelectedDevice.LEDs.FirstOrNullObject(a => a.IsLinkedToAnalogueChannel && a.LinkedAnalogueChannelName == ID, null);
-                        return result;
-                    }), System.Windows.Threading.DispatcherPriority.Normal);
-                    if (led == null)
-                        return;
-                    led.IsOn = !led.IsOn;
-                    return;
-                }
-
-                int rawvalue = int.Parse(valuestring);
-
-                Debug.Print("ID: {0}, rawvalue: {1}", ID, rawvalue);
-
-                if (previousvalue.ContainsKey(ID) == false)
-                {
-                    //Debug.Print("creating previousvalue entry");
-                    previousvalue.Add(ID, -1);
-                }
-
-                if (IsCloseTo(previousvalue[ID], rawvalue, 5) == false)
-                {
-                    //Debug.Print("finding LED now");
-                    LED led = Dispatcher.Invoke(new Func<LED>(delegate
-                    {
-                        LED result = SelectedDevice.LEDs.FirstOrNullObject(a => a.IsLinkedToAnalogueChannel && a.LinkedAnalogueChannelName == ID, null);
-                        return result;
-                    }), System.Windows.Threading.DispatcherPriority.Normal);
+        //        //if (s == controllerteststring)
+        //        //    controllerpassedtest = true;
 
 
-                    if (led != null)
-                    {
-                        //Debug.Print("LED found {0}", led.ToString());
-                        double value = MapAnalogueToPercentage(ID, rawvalue);
+        //        string ID = s.Substring(0, 2);
 
-                        Debug.Print("valuestring = {0}, rawvalue {1} mapped to {2}", valuestring, rawvalue, value.ToString("0.000"));
-                        previousvalue[ID] = rawvalue;
+        //        string valuestring = s.Substring(2).Trim();
+
+        //        if (valuestring.StartsWith("B"))
+        //        {
+        //            Debug.Print("ID: {0}, button state: {1}", ID, valuestring);
+        //            LED led = Dispatcher.Invoke(new Func<LED>(delegate
+        //            {
+        //                LED result = SelectedDevice.LEDs.FirstOrNullObject(a => a.IsLinkedToAnalogueChannel && a.LinkedAnalogueChannelName == ID, null);
+        //                return result;
+        //            }), System.Windows.Threading.DispatcherPriority.Normal);
+        //            if (led == null)
+        //                return;
+        //            led.IsOn = !led.IsOn;
+        //            return;
+        //        }
+
+        //        int rawvalue = int.Parse(valuestring);
+
+        //        Debug.Print("ID: {0}, rawvalue: {1}", ID, rawvalue);
+
+        //        if (previousvalue.ContainsKey(ID) == false)
+        //        {
+        //            //Debug.Print("creating previousvalue entry");
+        //            previousvalue.Add(ID, -1);
+        //        }
+
+        //        if (IsCloseTo(previousvalue[ID], rawvalue, 5) == false)
+        //        {
+        //            //Debug.Print("finding LED now");
+        //            LED led = Dispatcher.Invoke(new Func<LED>(delegate
+        //            {
+        //                LED result = SelectedDevice.LEDs.FirstOrNullObject(a => a.IsLinkedToAnalogueChannel && a.LinkedAnalogueChannelName == ID, null);
+        //                return result;
+        //            }), System.Windows.Threading.DispatcherPriority.Normal);
 
 
-                        led.Intensity = value;
-                        //Send_LEDIntensity(led, value);
-                    }
+        //            if (led != null)
+        //            {
+        //                //Debug.Print("LED found {0}", led.ToString());
+        //                double value = MapAnalogueToPercentage(ID, rawvalue);
 
-                }
-            }
-        }
+        //                Debug.Print("valuestring = {0}, rawvalue {1} mapped to {2}", valuestring, rawvalue, value.ToString("0.000"));
+        //                previousvalue[ID] = rawvalue;
+
+
+        //                led.Intensity = value;
+        //                //Send_LEDIntensity(led, value);
+        //            }
+
+        //        }
+        //    }
+        //}
 
         #endregion
 
@@ -1032,9 +1038,11 @@ namespace LED_Controller
         {
             object o = App.Current.Resources["DIALOG_About"];
 
-            AboutViewModel vm = new AboutViewModel();
-            vm.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            vm.SettingsFilename = settingsfilename;
+            AboutViewModel vm = new AboutViewModel
+            {
+                Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
+                SettingsFilename = settingsfilename
+            };
             ((FrameworkElement)o).DataContext = vm;
             var result = await DialogHost.Show(o);
         }

@@ -1,22 +1,21 @@
 ﻿<Window x:Class="LED_Controller.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:HelperControls="clr-namespace:Helper.Controls;assembly=SNSHelper"
-        xmlns:HelperCommon="clr-namespace:Helper.Common;assembly=SNSHelper"
         xmlns:LEDController="clr-namespace:LED_Controller"
+        xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
         xmlns:LEDControllerCommon="clr-namespace:LED_Controller.Common"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:m="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:HelperConverters="clr-namespace:Helper.Converters;assembly=SNSHelper"
+        WindowStyle="None"
         m:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
         Title="LED Controller - Peter S. Freestone 2018" 
         Loaded="Window_Loaded"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Text.Foreground}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14">
     <Window.FontFamily>
@@ -28,6 +27,7 @@
                 <sys:String>IsFavourite</sys:String>
             </CollectionViewSource.LiveFilteringProperties>
         </CollectionViewSource>
+        <HelperConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolVisibilityConverter"></HelperConverters:InverseBoolToVisibilityConverter>
     </Window.Resources>
     
     <md:DialogHost x:Name="dialoghost" SnackbarMessageQueue="{Binding ElementName=snackbar, Path=MessageQueue}">
@@ -55,11 +55,11 @@
                 <!--<HelperControls:ImageButton ImageSource="Icons/appbar.camera.flash.off.selected.png"
                                             Command="{x:Static LEDController:MainWindow.AllLEDsOffCommand}" ToolTip="Disable All LEDs">All Off</HelperControls:ImageButton>-->
 
-                <md:ColorZone Grid.Row="0" Mode="Dark">
+                <md:ColorZone Grid.Row="0" Mode="PrimaryDark">
                     <DockPanel>
                         <md:PopupBox
-      DockPanel.Dock="Right"
-      PlacementMode="BottomAndAlignRightEdges">
+                              DockPanel.Dock="Right"
+                              PlacementMode="BottomAndAlignRightEdges">
                             <Grid Width="300">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
@@ -109,7 +109,7 @@
                             </ListBox.ItemsPanel>
                         </ListBox>
                         <StackPanel Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolVisibilityConverter}}" Margin="10">
-                            <md:ColorZone Mode="Accent" >
+                            <md:ColorZone Mode="SecondaryDark" >
 
                                 <TextBlock Text="No devices" HorizontalAlignment="Center"></TextBlock>
                             </md:ColorZone>
@@ -190,7 +190,7 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
-                <!--<GridSplitter Grid.Row="3" Grid.ColumnSpan="2"  Background="{StaticResource MaterialDesignDivider}"
+                <!--<GridSplitter Grid.Row="3" Grid.ColumnSpan="2"  Background="{StaticResource Red}"
                           HorizontalAlignment="Stretch" 
                           VerticalAlignment="Stretch" Height="10"
                           Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}"></GridSplitter>-->
