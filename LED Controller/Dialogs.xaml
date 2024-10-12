@@ -156,7 +156,7 @@
             <Button
           Background="{Binding Fill}"
           BorderBrush="Transparent"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
             </Button>

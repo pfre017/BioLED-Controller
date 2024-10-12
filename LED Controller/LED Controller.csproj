@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
 		<RootNamespace>LED_Controller</RootNamespace>
 		<Nullable>enable</Nullable>
 		<Version>3.0.1</Version>
@@ -27,21 +27,21 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="ControlzEx" Version="6.0.0" />
-		<PackageReference Include="MaterialDesignColors" Version="3.0.0-ci368" />
-		<PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci368" />
+		<PackageReference Include="ControlzEx" Version="7.0.0-rc0118" />
+		<PackageReference Include="MaterialDesignColors" Version="3.1.1-ci780" />
+		<PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci780" />
 		<PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
 		<PackageReference Include="NETStandard.Library" Version="2.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SNSHelper" Version="4.1.117" />
+		<PackageReference Include="SNS.Helper" Version="4.4.2" />
 		<PackageReference Include="System.Buffers" Version="4.5.1" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="System.ComponentModel.Composition" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="System.ComponentModel.Composition" Version="9.0.0-rc.2.24473.5" />
 		<PackageReference Include="System.Console" Version="4.3.1" />
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0-rc.2.24473.5" />
 		<PackageReference Include="System.IO" Version="4.3.0" />
 		<PackageReference Include="System.Memory" Version="4.5.5" />
 		<PackageReference Include="System.Net.Primitives" Version="4.3.1" />

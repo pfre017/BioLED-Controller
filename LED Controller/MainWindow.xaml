@@ -122,13 +122,13 @@
                               Margin="0 -30 16 -20">
                                 <Button
                                Command="{x:Static LEDController:MainWindow.ScanDevicesCommand}" ToolTip="Scan for Devices"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
                                     <md:PackIcon Kind="Magnify" />
                                 </Button>
                                 <Button Visibility="{Binding SelectedDevice, Converter={StaticResource NullVisibilityConverter}}"
                                Command="{x:Static LEDController:MainWindow.RemoveDeviceCommand}" ToolTip="Remove Device"
                         CommandParameter="{Binding SelectedDevice}"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Margin="20,0,0,0">
+                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
                                     <md:PackIcon
         Kind="Delete" />
                                 </Button>
@@ -158,21 +158,21 @@
                                 <Button
                                Command="{x:Static LEDController:MainWindow.AddLEDCommand}" ToolTip="Add LED"
                         CommandParameter="{Binding SelectedDevice}"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
                                     <md:PackIcon
         Kind="Plus" />
                                 </Button>
                                 <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
                                Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
                         CommandParameter="{Binding SelectedLED}"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Margin="20,0,0,0">
+                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
                                     <md:PackIcon
         Kind="Pencil" />
                                 </Button>
                                 <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
                                Command="{x:Static LEDController:MainWindow.RemoveLEDCommand}" ToolTip="Remove LED"
                         CommandParameter="{Binding SelectedLED}"
-                              Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Margin="20,0,0,0">
+                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
                                     <md:PackIcon
         Kind="Delete" />
                                 </Button>
