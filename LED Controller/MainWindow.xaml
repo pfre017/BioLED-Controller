@@ -9,15 +9,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:m="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        WindowStyle="None"
+        Style="{StaticResource MaterialDesignWindow}"
         m:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
-        Title="LED Controller - Peter S. Freestone 2018" 
-        Loaded="Window_Loaded"
-        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Text.Foreground}"
-        Background="{DynamicResource MaterialDesign.Brush.Background}"
-        TextElement.FontWeight="Medium"
-        TextElement.FontSize="14">
+        Title="LED Controller" 
+        Loaded="Window_Loaded">
     <Window.FontFamily>
         <md:MaterialDesignFont></md:MaterialDesignFont>
     </Window.FontFamily>
@@ -29,8 +25,8 @@
         </CollectionViewSource>
         <HelperConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolVisibilityConverter"></HelperConverters:InverseBoolToVisibilityConverter>
     </Window.Resources>
-    
-    <md:DialogHost x:Name="dialoghost" SnackbarMessageQueue="{Binding ElementName=snackbar, Path=MessageQueue}">
+
+    <md:DialogHost x:Name="dialoghost" SnackbarMessageQueue="{Binding ElementName=snackbar, Path=MessageQueue}" Margin="10" Background="{StaticResource MaterialDesign.Brush.Background}">
         <md:DrawerHost >
             <md:DrawerHost.BottomDrawerContent>
                 <ListBox x:Name="Logger" VerticalAlignment="Stretch" MinHeight="50" ItemsSource="{Binding Logs}"
@@ -95,7 +91,10 @@
                                 <Button Click="Exit_Click" Grid.Row="8">Exit</Button>
                             </Grid>
                         </md:PopupBox>
-                        <TextBlock  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="LED Controller" Margin="10,5" VerticalAlignment="Center" DockPanel.Dock="Left"></TextBlock>
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                            <TextBlock  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="LED Controller - Peter S.Freestone 2018" Margin="10,5" VerticalAlignment="Center" ></TextBlock>
+                            <TextBlock  Style="{StaticResource MaterialDesignBodyMediumTextBlock}" FontStyle="Italic" Text="Peter S.Freestone 2018" Margin="10,0" VerticalAlignment="Center"></TextBlock>
+                        </StackPanel>
                     </DockPanel>
                 </md:ColorZone>
                 <GroupBox Grid.Row="1" Header="Devices" x:Name="DevicesGroupBox" Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}">
@@ -109,11 +108,12 @@
                             </ListBox.ItemsPanel>
                         </ListBox>
                         <StackPanel Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolVisibilityConverter}}" Margin="10">
-                            <md:ColorZone Mode="SecondaryDark" >
-
-                                <TextBlock Text="No devices" HorizontalAlignment="Center"></TextBlock>
+                            <md:ColorZone Mode="SecondaryLight" Foreground="White">
+                                <TextBlock Text="No devices" Style="{StaticResource MaterialDesignButtonTextBlock}"
+                                           HorizontalAlignment="Center"
+                                           ></TextBlock>
                             </md:ColorZone>
-                            <Button Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Center" Margin="2"
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Margin="10"
                                 Click="CreateDEMODevice_Click">Create DEMO Device</Button>
                         </StackPanel>
                         <md:TransitioningContent OpeningEffect="{md:TransitionEffect SlideInFromRight, Duration=0:0:1.2}">
@@ -126,11 +126,10 @@
                                     <md:PackIcon Kind="Magnify" />
                                 </Button>
                                 <Button Visibility="{Binding SelectedDevice, Converter={StaticResource NullVisibilityConverter}}"
-                               Command="{x:Static LEDController:MainWindow.RemoveDeviceCommand}" ToolTip="Remove Device"
-                        CommandParameter="{Binding SelectedDevice}"
+                                        Command="{x:Static LEDController:MainWindow.RemoveDeviceCommand}" ToolTip="Remove Device"
+                                        CommandParameter="{Binding SelectedDevice}"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
-                                    <md:PackIcon
-        Kind="Delete" />
+                                    <md:PackIcon Kind="Delete" />
                                 </Button>
                             </StackPanel>
                         </md:TransitioningContent>

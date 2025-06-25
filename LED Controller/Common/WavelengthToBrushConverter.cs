@@ -21,13 +21,10 @@ namespace LED_Controller.Common
                 return new SolidColorBrush(LEDControllerHelper.WavelengthToColor(wavelength));
             }
             return Brushes.Transparent;
-
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
             throw new NotImplementedException();
         }
     }

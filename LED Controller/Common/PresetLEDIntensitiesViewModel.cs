@@ -10,7 +10,7 @@ namespace LED_Controller.Common
     public class PresetLEDIntensitiesViewModel
     {
         public double NewPresetLEDIntensityValue { get; set; } = 0;
-        public ObservableCollection<double> PresetLEDIntensities { get; set; }
+        public ObservableCollection<double>? PresetLEDIntensities { get; set; }
         public double SelectedLEDItensity { get; set; } = -1;
     }
 }

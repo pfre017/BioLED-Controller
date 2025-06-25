@@ -11,14 +11,15 @@ namespace LED_Controller.Common
     {
         public Settings()
         {
-            Devices = new List<BioLEDDevice>();
+            Devices = [];
+            PresetIntensities = [];
         }
 
         public List<BioLEDDevice> Devices { get; set; }
-        public string BaudRate { get; set; }
-        public string COMPort { get; set; }
-        public bool IsCompactMode { get; set; }
-        public bool IsDarkUIMode { get; set; }
+        public string BaudRate { get; set; } = "115200";
+        public string COMPort { get; set; } = "COM3";
+        public bool? IsCompactMode { get; set; }
+        public bool? IsDarkUIMode { get; set; }
 
         public List<double> PresetIntensities { get; set; }
 
@@ -29,6 +30,6 @@ namespace LED_Controller.Common
                 return DefaultPresetIntensities_;
             }
         }
-        private List<double> DefaultPresetIntensities_ = new List<double>() { 1, 2, 5, 10, 20, 50, 100 };
+        private readonly List<double> DefaultPresetIntensities_ = [1, 2, 5, 10, 20, 50, 100];
     }
 }

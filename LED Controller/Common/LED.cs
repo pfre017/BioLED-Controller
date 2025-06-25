@@ -22,7 +22,6 @@ namespace LED_Controller.Common
 
         #endregion
 
-
         #region AnalogueChannel Linking
         public bool IsLinkedToAnalogueChannel
         {
@@ -35,7 +34,7 @@ namespace LED_Controller.Common
         }
         private bool IsLinkedToAnalogueChannel_ = false;
 
-        public string LinkedAnalogueChannelName
+        public string? LinkedAnalogueChannelName
         {
             get { return LinkedAnalogueChannelName_; }
             set
@@ -44,7 +43,7 @@ namespace LED_Controller.Common
                 base.RaisePropertyChanged(nameof(LinkedAnalogueChannelName));
             }
         }
-        private string LinkedAnalogueChannelName_;
+        private string? LinkedAnalogueChannelName_;
 
         #endregion
 
@@ -153,9 +152,9 @@ namespace LED_Controller.Common
             }
         }
 
-        private BioLEDDevice Device_;
+        private BioLEDDevice? Device_;
         [XmlIgnore]
-        public BioLEDDevice Device
+        public BioLEDDevice? Device
         {
             get { return Device_; }
             set
@@ -163,13 +162,13 @@ namespace LED_Controller.Common
                 if (Device_ != null)
                     Device_.PropertyChanged -= Device__PropertyChanged;
                 Device_ = value;
-                Device_.PropertyChanged += Device__PropertyChanged;
+                Device_?.PropertyChanged += Device__PropertyChanged;
                 base.RaisePropertyChanged(nameof(Device));
                 base.RaisePropertyChanged(nameof(IsConnected));
             }
         }
 
-        private void Device__PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Device__PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsConnected")
                 base.RaisePropertyChanged(nameof(IsConnected));
@@ -192,12 +191,12 @@ namespace LED_Controller.Common
         {
             get
             {
-                return string.Format("Device #{0}  {5}nm  [ChannelIndex #{1}  {2}] Mode: {3} Intensity: {4}%", Device.SerialNumber, DeviceChannelIndex, IsConnected ? " CONNECTED" : " DISCONNECTED", this.Mode.ToString().ToUpper(), this.Intensity, this.Wavelength);
+                return $"Device #{Device?.SerialNumber}  {Wavelength}nm  [ChannelIndex #{DeviceChannelIndex}  {(IsConnected ? " CONNECTED" : " DISCONNECTED")}] Mode: {Mode.ToString().ToUpper()} Intensity: {Intensity}%";
             }
         }
 
         [XmlIgnore]
-        public Brush Fill
+        public Brush? Fill
         {
             get
             {
@@ -209,50 +208,45 @@ namespace LED_Controller.Common
                 base.RaisePropertyChanged(nameof(Fill));
             }
         }
-        private Brush Fill_;
+        private Brush? Fill_;
 
         public override string ToString()
         {
-            return string.Format("LED {0}nm  {1}  [ChannelIndex #{3}  {2}]", Wavelength, IsOn ? "ON" : "OFF", IsConnected ? "CONNECTED" : "DISCONNECTED", DeviceChannelIndex);
+            return $"LED {Wavelength}nm  {(IsOn ? "ON" : "OFF")}  [ChannelIndex #{DeviceChannelIndex}  {(IsConnected ? "CONNECTED" : "DISCONNECTED")}]";
         }
 
         #region Events
 
         private void OnModeChanged(LEDModeEnum Mode)
         {
-            if (intensities_.ContainsKey(Mode))
-                Intensity = intensities_[Mode];
+            if (intensities_.TryGetValue(Mode, out double value))
+                Intensity = value;
 
-            if (ModeChanged != null)
-                ModeChanged.Invoke(this, new EventArgs<LEDModeEnum>(Mode));
+            ModeChanged?.Invoke(this, new EventArgs<LEDModeEnum>(Mode));
         }
 
         private void OnIntensityChanged(double Intensity)
         {
-            if (IntensityChanged != null)
-                IntensityChanged.Invoke(this, new EventArgs<double>(Intensity));
+            IntensityChanged?.Invoke(this, new EventArgs<double>(Intensity));
 
-            if (intensities_.ContainsKey(Mode))
+            if (!intensities_.TryAdd(Mode, Intensity))
                 intensities_[Mode] = Intensity;
-            else
-                intensities_.Add(Mode, Intensity);
         }
 
         private void OnIsOnChanged(bool IsOn)
         {
-            if (IsOnChanged != null)
-                IsOnChanged.Invoke(this, new EventArgs<bool>(IsOn));
+            IsOnChanged?.Invoke(this, new EventArgs<bool>(IsOn));
         }
 
-        public event EventHandler<EventArgs<bool>> IsOnChanged;
-        public event EventHandler<EventArgs<double>> IntensityChanged;
-        public event EventHandler<EventArgs<LEDModeEnum>> ModeChanged;
+        public event EventHandler<EventArgs<bool>>? IsOnChanged;
+        public event EventHandler<EventArgs<double>>? IntensityChanged;
+        public event EventHandler<EventArgs<LEDModeEnum>>? ModeChanged;
 
         #endregion
 
         #region Intensity Cache
 
-        private Dictionary<LEDModeEnum, double> intensities_ = new Dictionary<LEDModeEnum, double>();
+        private readonly Dictionary<LEDModeEnum, double> intensities_ = [];
 
         [XmlElement("CachedIntensities"), Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -260,7 +254,7 @@ namespace LED_Controller.Common
         {
             get
             {
-                return intensities_.Select(a => new LEDModeIntensity() { Mode = a.Key, Intensity = a.Value }).ToArray();
+                return [.. intensities_.Select(a => new LEDModeIntensity() { Mode = a.Key, Intensity = a.Value })];
             }
             set
             {

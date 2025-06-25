@@ -43,7 +43,7 @@ namespace LED_Controller
             SetValue(IsShutterOpenProperty, false);
             SetValue(COMPortsProperty, new ObservableCollection<string>());
             SetValue(BaudRatesProperty, new ObservableCollection<string>());
-            this.DataContext = this;
+            DataContext = this;
         }
 
         static MainWindow()
@@ -53,13 +53,12 @@ namespace LED_Controller
 
         #endregion
 
-
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
 
             // Begin dragging the window
-            this.DragMove();
+            DragMove();
         }
 
         #region Dependency Properties
@@ -87,8 +86,6 @@ namespace LED_Controller
 
         private static void OnDarkUIModeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            BaseTheme bt = ThemeAssist.GetTheme(o);
-
             if (((bool)e.NewValue) == true)
                 ThemeAssist.SetTheme(((MainWindow)o), BaseTheme.Dark);
             else
@@ -152,12 +149,6 @@ namespace LED_Controller
         public static readonly DependencyProperty SelectedBaudRateProperty =
             DependencyProperty.Register("SelectedBaudRate", typeof(string), typeof(MainWindow), new PropertyMetadata(string.Empty));
 
-        //public bool ShowFavouriteLEDsOnly
-        //{
-        //    get { return (bool)GetValue(ShowFavouriteLEDsOnlyProperty); }
-        //    set { SetValue(ShowFavouriteLEDsOnlyProperty, value); }
-        //}
-
         public bool IsSafeModeChangeEndabled
         {
             get { return (bool)GetValue(IsSafeModeChangeEndabledProperty); }
@@ -212,13 +203,7 @@ namespace LED_Controller
 
         // Using a DependencyProperty as the backing store for Devices.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register("Devices", typeof(ObservableCollection<BioLEDDevice>), typeof(MainWindow), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnDevicesChanged));
-
-        private static void OnDevicesChanged(object o, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
+            DependencyProperty.Register("Devices", typeof(ObservableCollection<BioLEDDevice>), typeof(MainWindow), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
 
         public bool HasDevices
         {
@@ -232,9 +217,9 @@ namespace LED_Controller
 
 
 
-        public BioLEDDevice SelectedDevice
+        public BioLEDDevice? SelectedDevice
         {
-            get { return (BioLEDDevice)GetValue(SelectedDeviceProperty); }
+            get { return (BioLEDDevice?)GetValue(SelectedDeviceProperty); }
             set { SetValue(SelectedDeviceProperty, value); }
         }
 
@@ -242,9 +227,9 @@ namespace LED_Controller
         public static readonly DependencyProperty SelectedDeviceProperty =
             DependencyProperty.Register("SelectedDevice", typeof(BioLEDDevice), typeof(MainWindow), new PropertyMetadata(null));
 
-        public LED SelectedLED
+        public LED? SelectedLED
         {
-            get { return (LED)GetValue(SelectedLEDProperty); }
+            get { return (LED?)GetValue(SelectedLEDProperty); }
             set { SetValue(SelectedLEDProperty, value); }
         }
 
@@ -258,14 +243,14 @@ namespace LED_Controller
 
         #region Commands
 
-        private static RoutedCommand AllLEDsOffCommand_;
-        public static RoutedCommand AllLEDsOffCommand
+        private static RoutedCommand? AllLEDsOffCommand_;
+        public static RoutedCommand? AllLEDsOffCommand
         {
             get { return AllLEDsOffCommand_; }
         }
 
-        private static RoutedCommand AddLEDCommand_;
-        public static RoutedCommand AddLEDCommand
+        private static RoutedCommand? AddLEDCommand_;
+        public static RoutedCommand? AddLEDCommand
         {
             get
             {
@@ -273,8 +258,8 @@ namespace LED_Controller
             }
         }
 
-        private static RoutedCommand RemoveLEDCommand_;
-        public static RoutedCommand RemoveLEDCommand
+        private static RoutedCommand? RemoveLEDCommand_;
+        public static RoutedCommand? RemoveLEDCommand
         {
             get
             {
@@ -282,8 +267,8 @@ namespace LED_Controller
             }
         }
 
-        private static RoutedCommand EditLEDCommand_;
-        public static RoutedCommand EditLEDCommand
+        private static RoutedCommand? EditLEDCommand_;
+        public static RoutedCommand? EditLEDCommand
         {
             get
             {
@@ -291,8 +276,8 @@ namespace LED_Controller
             }
         }
 
-        private static RoutedCommand ConnectArduinoCommand_;
-        public static RoutedCommand ConnectArduinoCommand
+        private static RoutedCommand? ConnectArduinoCommand_;
+        public static RoutedCommand? ConnectArduinoCommand
         {
             get
             {
@@ -300,8 +285,8 @@ namespace LED_Controller
             }
         }
 
-        private static RoutedCommand ScanDevicesCommand_;
-        public static RoutedCommand ScanDevicesCommand
+        private static RoutedCommand? ScanDevicesCommand_;
+        public static RoutedCommand? ScanDevicesCommand
         {
             get
             {
@@ -309,12 +294,12 @@ namespace LED_Controller
             }
         }
 
-        private static RoutedCommand RemoveDeviceCommand_;
-        public static RoutedCommand RemoveDeviceCommand
+        private static RoutedCommand? RemoveDeviceCommand_;
+        public static RoutedCommand? RemoveDeviceCommand
         {
             get
             {
-                return ScanDevicesCommand_;
+                return RemoveDeviceCommand_;
             }
         }
 
@@ -400,8 +385,7 @@ namespace LED_Controller
 
         private static void OnConnectArduino(object o, ExecutedRoutedEventArgs e)
         {
-            MainWindow mw = (MainWindow)o;
-            //mw.ConnectMonitor_Click(null, null);
+            throw new NotImplementedException("ConnectArduino command is not implemented yet.");
         }
 
         private static void OnQueryConnectArduino(object o, CanExecuteRoutedEventArgs e)
@@ -422,8 +406,8 @@ namespace LED_Controller
 
         private static void OnScanDevices(object o, ExecutedRoutedEventArgs e)
         {
-            MainWindow mw = o as MainWindow;
-            mw.Connect_Click(null, null);
+            MainWindow? mw = o as MainWindow;
+            mw?.Connect_Click(mw, null);
         }
 
         private static void OnQueryScanDevices(object o, CanExecuteRoutedEventArgs e)
@@ -438,8 +422,7 @@ namespace LED_Controller
         }
         private static void OnQueryRemoveDevice(object o, CanExecuteRoutedEventArgs e)
         {
-            var device = e.Parameter as BioLEDDevice;
-            if (device != null)
+            if (e.Parameter is BioLEDDevice)
                 e.CanExecute = true;
             else
                 e.CanExecute = false;
@@ -457,7 +440,7 @@ namespace LED_Controller
             var result = DialogHost.Show(o, delegate (object oo, DialogOpenedEventArgs args)
             {
                 SaveSettings();
-                snackbar.MessageQueue.Enqueue(string.Format("LED ({0} nm) EDITED", LED.Wavelength));
+                snackbar.MessageQueue?.Enqueue(string.Format("LED ({0} nm) EDITED", LED.Wavelength));
             });
         }
 
@@ -465,7 +448,7 @@ namespace LED_Controller
         {
             if (SelectedDevice != null)
             {
-                foreach (LED led in this.SelectedDevice.LEDs.Where(a => a.IsConnected))
+                foreach (LED led in SelectedDevice.LEDs.Where(a => a.IsConnected))
                 {
                     led.Mode = LEDModeEnum.Disabled;
                 }
@@ -474,23 +457,32 @@ namespace LED_Controller
 
         public async void AddLED()
         {
-            if (this.SelectedDevice.LEDs.Count >= this.SelectedDevice.ChannelCount)
+            if (SelectedDevice == null)
             {
-                snackbar.MessageQueue.Enqueue("Unable to add LED. All Device Channels used");
+                snackbar.MessageQueue?.Enqueue("Unable to add LED. No Device Selected");
+                return;
+            }
+
+            if (SelectedDevice.LEDs.Count >= SelectedDevice.ChannelCount)
+            {
+                snackbar.MessageQueue?.Enqueue("Unable to add LED. All Device Channels used");
             }
 
             object o = App.Current.Resources["DIALOG_EditLED"];
 
-            LED led = new LED
+            LED led = new()
             {
                 Wavelength = 470,
-                Device = this.SelectedDevice,
-                DeviceChannelIndex = this.SelectedDevice.LEDs.Count + 1
+                Device = SelectedDevice,
+                DeviceChannelIndex = SelectedDevice.LEDs.Count + 1
             };
 
             ((FrameworkElement)o).DataContext = led;
 
             var result = await DialogHost.Show(o);
+
+            if (result == null)
+                return;
 
             if ((bool)result)
             {
@@ -498,81 +490,78 @@ namespace LED_Controller
                 led.IsOnChanged += LED_IsOnChanged;
                 led.ModeChanged += LED_ModeChanged;
 
-                this.SelectedDevice.LEDs.Add(led);
-                snackbar.MessageQueue.Enqueue(string.Format("LED ({0} nm) ADDED", led.Wavelength));
+                SelectedDevice.LEDs.Add(led);
+                snackbar.MessageQueue?.Enqueue($"LED ({led.Wavelength} nm) ADDED");
                 SaveSettings();
             }
         }
 
         public void RemoveLED(LED LED)
         {
+            if (SelectedDevice == null)
+            {
+                snackbar.MessageQueue?.Enqueue("Unable to remove LED. No Device Selected");
+                return;
+            }
+
             LED.IntensityChanged -= LED_IntensityChanged;
             LED.IsOnChanged -= LED_IsOnChanged;
             LED.ModeChanged -= LED_ModeChanged;
 
-            this.SelectedDevice.LEDs.Remove(LED);
-            snackbar.MessageQueue.Enqueue(string.Format("LED REMOVED", LED.Wavelength));
+            _ = SelectedDevice.LEDs.Remove(LED);
+            snackbar.MessageQueue?.Enqueue($"LED ({LED.Wavelength}) REMOVED");
 
             SaveSettings();
         }
 
         public void RemoveDevice(BioLEDDevice Device)
         {
-            this.SelectedLED = null;
-            this.SelectedDevice = null;
+            SelectedLED = null;
+            SelectedDevice = null;
 
-            //Device.PropertyChanged -= propertych
-
-            this.Devices.Remove(Device);
+            _ = Devices.Remove(Device);
         }
 
         #endregion
 
         #region LED Callbacks
 
-        void LED_ModeChanged(object sender, Helper.Common.EventArgs<LEDModeEnum> e)
+        void LED_ModeChanged(object? sender, Helper.Common.EventArgs<LEDModeEnum> e)
         {
+            if (sender == null || e == null)
+                return;
+
             LED led = (LED)sender;
-            Log("LED_ModeChanged called for (new value = {0}) for {1}", e.Value.ToString(), led.DeviceDetailString);
+            Log($"LED_ModeChanged called for (new value = {e.Value}) for {led.DeviceDetailString}");
+
+            if (led.Device == null)
+            {
+                Log("LED_ModeChanged called, but Device is null, returning");
+                return;
+            }
 
             if (e.Value == LEDModeEnum.Pulse)
             {
-                MessageBox.Show("This Mode is not currently supported");
+                _ = MessageBox.Show("This Mode is not currently supported");
                 led.Mode = LEDModeEnum.Disabled;
             }
-
-            BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, e.Value.LEDModeToInt());
+            _ = BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, e.Value.LEDModeToInt());
         }
 
-        void LED_IsOnChanged(object sender, Helper.Common.EventArgs<bool> e)
+        void LED_IsOnChanged(object? sender, Helper.Common.EventArgs<bool> e)
         {
+            if (sender == null || e == null)
+                return;
             LED led = (LED)sender;
             Send_LEDIntensity(led, led.Intensity);      //Send_LEDIntensity will check the ON/OFF status, and send the appropriate Intensity
             Log("LED_IsOnChanged called for {0}", led.DeviceDetailString);
-            //try
-            //{
-            //    LED led = (LED)sender;
-
-            //    BioLEDInterface.MTUSB_BLSDriverSetNormalCurrent(led.Device.DeviceHandle, led.DeviceChannelIndex + 1, e.Value ? (int)Math.Floor(led.Intensity * 1000) : 0);
-
-            //    if (led.IsLinkedToAnalogueChannel)
-            //    {
-            //        if (port != null && port.IsOpen)
-            //        {
-            //            port.WriteLine(string.Format("{0} S{1}", led.LinkedAnalogueChannelName, e.Value ? "1" : "0"));
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(string.Format("Send_LEDIntensity failed\n\n{0} {1}\n\n{2}", ex.HResult, ex.Message, ex.ToString()), "Error");
-            //}
         }
 
-        void LED_IntensityChanged(object sender, Helper.Common.EventArgs<double> e)
+        void LED_IntensityChanged(object? sender, Helper.Common.EventArgs<double> e)
         {
+            if (sender == null || e == null)
+                return;
             LED led = (LED)sender;
-            //Debug.Print("LED_IntensityChanged to {0} for {1}", e.Value.ToString(), led.ToString());
 
             Send_LEDIntensity(led, e.Value);
         }
@@ -584,76 +573,77 @@ namespace LED_Controller
         private void SaveSettings()
         {
             XmlWriter writer = XmlWriter.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings");
-            XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+            XmlSerializer serializer = new(typeof(Settings));
 
-            Settings s = new Settings
+            Settings s = new()
             {
-                Devices = this.Devices.ToList(),
+                Devices = [.. Devices],
 
-                BaudRate = string.IsNullOrWhiteSpace(this.SelectedBaudRate) ? this.Settings.BaudRate : this.SelectedBaudRate,
-                COMPort = string.IsNullOrWhiteSpace(this.SelectedCOMPort) ? this.Settings.COMPort : this.SelectedCOMPort,
-                IsCompactMode = this.IsCompactMode,
-                IsDarkUIMode = this.IsDarkUIMode,
-                PresetIntensities = this.PresetIntensities?.ToList()
+                BaudRate = string.IsNullOrWhiteSpace(SelectedBaudRate) ? Settings.BaudRate : SelectedBaudRate,
+                COMPort = string.IsNullOrWhiteSpace(SelectedCOMPort) ? Settings.COMPort : SelectedCOMPort,
+                IsCompactMode = IsCompactMode,
+                IsDarkUIMode = IsDarkUIMode,
+                PresetIntensities = [.. PresetIntensities]
             };
 
             serializer.Serialize(writer, s);
 
             writer.Close();
 
-            snackbar.MessageQueue.Enqueue("SAVED");
+            snackbar.MessageQueue?.Enqueue("SAVED");
         }
 
         private void LoadSettings()
         {
-            Log("LoadSettings() called Filename: {0}", settingsfilename);
+            Log($"LoadSettings() called Filename: {settingsFilename}");
 
-            XmlReader reader = null;
+            XmlReader? reader = null;
             try
             {
-                reader = XmlReader.Create(settingsfilename);
-                XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+                reader = XmlReader.Create(settingsFilename);
+                XmlSerializer serializer = new(typeof(Settings));
 
-                this.Settings = (Settings)serializer.Deserialize(reader);
+                if (serializer.Deserialize(reader) is Settings settings)
+                    Settings = settings;
+                else
+                {
+                    Log($"LoadSettings() FAILED to Deserialize to settings");
+                    Settings = new Settings(); //if deserialization fails, create a new Settings object with default values
+                }
             }
             catch (Exception e)
             {
-                this.Settings = new Settings();
-                Log("LoadSettings() failed ({0})", e.Message);
+                Settings = new Settings();
+                Log($"LoadSettings() failed ({e.Message})");
             }
             finally
             {
-                if (reader != null)
-                    reader.Close();
+                reader?.Close();
             }
 
-            snackbar.MessageQueue.Enqueue(string.Format("OPENED\n\n{0}", settingsfilename));
+            snackbar.MessageQueue?.Enqueue(string.Format("OPENED\n\n{0}", settingsFilename));
 
-            this.COMPorts.Clear();
-            //foreach (string port in SerialPort.GetPortNames())
-            //{
-            //    this.COMPorts.Add(port);
-            //}
+            COMPorts.Clear();
 
-            this.BaudRates.Clear();
+            BaudRates.Clear();
 
-            this.BaudRates.Add("2400");
-            this.BaudRates.Add("4800");
-            this.BaudRates.Add("9600");
-            this.BaudRates.Add("14400");
-            this.BaudRates.Add("19200");
-            this.BaudRates.Add("28800");
-            this.BaudRates.Add("38400");
-            this.BaudRates.Add("57600");
-            this.BaudRates.Add("115200");
+            BaudRates.Add("2400");
+            BaudRates.Add("4800");
+            BaudRates.Add("9600");
+            BaudRates.Add("14400");
+            BaudRates.Add("19200");
+            BaudRates.Add("28800");
+            BaudRates.Add("38400");
+            BaudRates.Add("57600");
+            BaudRates.Add("115200");
 
-            if (this.COMPorts.Contains(this.Settings.COMPort))
-                this.SelectedCOMPort = this.Settings.COMPort;
+            if (COMPorts.Contains(Settings.COMPort))
+                SelectedCOMPort = Settings.COMPort;
 
-            this.SelectedBaudRate = this.Settings.BaudRate;
+            SelectedBaudRate = Settings.BaudRate;
 
-            this.Devices.Clear();
-            Settings.Devices.ForEach(a => this.Devices.Add(a));
+            Devices.Clear();
+            Settings.Devices.ForEach(a => Devices.Add(a));
             HasDevices = Devices.Count > 0;
 
             foreach (BioLEDDevice device in Devices)
@@ -667,22 +657,22 @@ namespace LED_Controller
 
                 foreach (LED led in device.LEDs)
                 {
-                    BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
+                    _ = BioLEDInterface.MTUSB_BLSDriverSetMode(device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
                 }
             }
 
-            if (this.Settings.PresetIntensities == null)
-                this.Settings.PresetIntensities = Settings.DefaultPresetIntensities.ToList();       //default Preset Intensities
-            else if (this.Settings.PresetIntensities.Count == 0)
-                this.Settings.PresetIntensities = Settings.DefaultPresetIntensities.ToList();       //default Preset Intensities
+            if (Settings.PresetIntensities == null)
+                Settings.PresetIntensities = [.. Settings.DefaultPresetIntensities];       //default Preset Intensities
+            else if (Settings.PresetIntensities.Count == 0)
+                Settings.PresetIntensities = [.. Settings.DefaultPresetIntensities];       //default Preset Intensities
 
-            this.SelectedDevice = Devices.FirstOrNullObject(null);
-            this.IsDarkUIMode = Settings.IsDarkUIMode;
-            this.IsCompactMode = Settings.IsCompactMode;
-            this.PresetIntensities = new ObservableCollection<double>(Settings.PresetIntensities);
+            SelectedDevice = Devices.FirstOrNullObject(null);
+            IsDarkUIMode = Settings.IsDarkUIMode ?? true;
+            IsCompactMode = Settings.IsCompactMode ?? true;
+            PresetIntensities = new ObservableCollection<double>(Settings.PresetIntensities);
         }
 
-        private string settingsfilename = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings";
+        private readonly string settingsFilename = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + "LED Controller.settings";
 
         #endregion
 
@@ -692,10 +682,6 @@ namespace LED_Controller
         {
             SaveSettings();
 
-            //if (port != null)
-            //{
-            //    port.Close();
-            //}
             base.OnClosing(e);
         }
 
@@ -708,12 +694,12 @@ namespace LED_Controller
 
         #region Private Functions
 
-        private void Connect_Click(object sender, RoutedEventArgs e)
+        private void Connect_Click(object sender, RoutedEventArgs? e)
         {
             //Remove event handlers from OLD devices before calling GetDevices (which clears all devices)
             foreach (BioLEDDevice device in Devices)
             {
-                Log(string.Format("Removing event handlers from BioLEDDevice #{0}", device.SerialNumber));
+                Log($"Removing event handlers from BioLEDDevice #{device.SerialNumber}");
 
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged -= LED_IntensityChanged);
                 device.LEDs.AsParallel().ForAll(a => a.IsOnChanged -= LED_IsOnChanged);
@@ -724,7 +710,7 @@ namespace LED_Controller
 
             foreach (BioLEDDevice device in Devices)
             {
-                Log(string.Format("Adding event handlers for BioLEDDevice #{0}", device.SerialNumber));
+                Log($"Adding event handlers for BioLEDDevice #{device.SerialNumber}");
 
                 device.LEDs.AsParallel().ForAll(a => a.Device = device);
                 device.LEDs.AsParallel().ForAll(a => a.IntensityChanged += LED_IntensityChanged);
@@ -733,25 +719,24 @@ namespace LED_Controller
 
                 foreach (LED led in device.LEDs)
                 {
-                    BioLEDInterface.MTUSB_BLSDriverSetMode(led.Device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
+                    _ = BioLEDInterface.MTUSB_BLSDriverSetMode(device.DeviceHandle, led.DeviceChannelIndex, led.Mode.LEDModeToInt());
                 }
             }
         }
 
         private async void GetDevices()
         {
-            //Devices.Clear();
             Log("GetDevices() called");
 
             int devicecount = BioLEDInterface.MTUSB_BLSDriverInitDevices();
 
-            //snackbar.MessageQueue.Enqueue("Get Devices");
-
-            Log(string.Format("{0} BioLED devices could be found (BioLEDInterface.MTUSB_BLSDriverInitDevices())", devicecount));
+            Log($"{devicecount} BioLED devices could be found (BioLEDInterface.MTUSB_BLSDriverInitDevices())");
 
             if (devicecount == 0)
             {
                 var result = await DialogHost.Show(App.Current.Resources["Dialog_NoBioLEDDevices"]);
+                HasDevices = false;
+                Devices.Clear();
                 return;
             }
 
@@ -759,34 +744,30 @@ namespace LED_Controller
             {
                 int result = BioLEDInterface.MTUSB_BLSDriverOpenDevice(i);
 
-                Log(string.Format("Device # {0} OPEN called, return = {1}", i, result));
-                //MessageBox.Show(string.Format("Device # {0} OPEN called, return = {1}", i, result));
+                Log($"Device # {i} OPEN called, return = {result}");
 
                 if (result > -1)
                 {
-                    BioLEDDevice device = new BioLEDDevice(result);
+                    BioLEDDevice device = new(result);
 
-                    StringBuilder sb = new StringBuilder(256);
+                    StringBuilder sb = new(256);
 
                     int ok = BioLEDInterface.MTUSB_BLSDriverGetSerialNo(device.DeviceHandle, sb, 256);
 
-                    //Debug.Print("MTUSB_BLSDriverGetSerialNo returned {0}", ok);
                     device.SerialNumber = sb.ToString();
 
                     int channelcount = BioLEDInterface.MTUSB_BLSDriverGetChannels(device.DeviceHandle);
 
-                    Log(string.Format("MTUSB_BLSDriverGetChannels returned {0}", channelcount));
-                    //MessageBox.Show(string.Format("MTUSB_BLSDriverGetChannels returned {0}", channelcount));
+                    Log($"MTUSB_BLSDriverGetChannels returned {channelcount}");
 
                     device.ChannelCount = channelcount;
                     device.IsConnected = true;
 
-                    //MessageBox.Show(device.ToString());
-                    if (this.Devices.Any(a => a.SerialNumber == device.SerialNumber))
+                    if (Devices.Any(a => a.SerialNumber == device.SerialNumber))
                     {
                         //Device already present (ie. was loaded from the Settings File), therefore simply update its status to IsConnected
-                        this.Devices.First(a => a.SerialNumber == device.SerialNumber).IsConnected = true;
-                        Log(string.Format("Device {0} found", device.SerialNumber));
+                        Devices.First(a => a.SerialNumber == device.SerialNumber).IsConnected = true;
+                        Log($"Device {device.SerialNumber} found");
                     }
                     else
                     {
@@ -798,33 +779,7 @@ namespace LED_Controller
             }
         }
 
-        //private bool controllerpassedtest = false;
-        private string controllerteststring;
-
-        //public static SerialPort port;
-        private Dictionary<string, int> previousvalue = new Dictionary<string, int>();
-
-        private static double MapAnalogueToPercentage(string AnalogueChannelID, int Value)
-        {
-            //find calibration information for the given AnalogueChannelID
-            double factor = (1d / 1024d);
-            double offset = 0;
-
-            return Math.Round(((Value - offset) * factor), 3);
-        }
-
-        private bool IsCloseTo(int Value1, int Value2, int Jitter)
-        {
-            if (Value1 == Value2)
-                return true;
-            if (Value1 == 0)
-                return false;
-            if (Value1 >= 255)
-                return false;
-            if ((int)Math.Abs(Value1 - Value2) <= Jitter)
-                return true;
-            return false;
-        }
+        private readonly Dictionary<string, int> previousvalue = [];
 
         /// <summary>
         /// 
@@ -833,6 +788,16 @@ namespace LED_Controller
         /// <param name="Value">As percentage (e.g. 0.5 = 50%)</param>
         private void Send_LEDIntensity(LED LED, double Value)
         {
+            if (LED == null)
+            {
+                Log("Send_LEDIntensity called, but LED is null, returning");
+                return;
+            }
+            if (LED.Device == null)
+            {
+                Log("Send_LEDIntensity called, but LED.Device is null, returning");
+                return;
+            }
 
             if (LED.Mode == LEDModeEnum.Disabled)
             {
@@ -872,16 +837,14 @@ namespace LED_Controller
 
                     }
                 if (LED.Mode == LEDModeEnum.Pulse)
-                    DialogHost.Show(this.Resources["DIALOG_NotImplemented"]);
+                    _ = DialogHost.Show(Resources["DIALOG_NotImplemented"]);
 
-                if (sentvalues.ContainsKey(LED))
-                    sentvalues[LED] = Value;
-                else
-                    sentvalues.Add(LED, Value);
+                if (!sentValues.TryAdd(LED, Value))
+                    sentValues[LED] = Value;
             }
         }
 
-        private Dictionary<LED, double> sentvalues = new Dictionary<LED, double>();
+        private readonly Dictionary<LED, double> sentValues = [];
 
         #endregion
 
@@ -1017,19 +980,23 @@ namespace LED_Controller
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private async void ArduinoDialog_Click(object sender, RoutedEventArgs e)
         {
             object o = App.Current.Resources["DIALOG_ArduinoDevice"];
-            var result = await DialogHost.Show(o);
+            _ = await DialogHost.Show(o);
         }
 
         private void CreateDEMODevice_Click(object sender, RoutedEventArgs e)
         {
             Devices.Clear();
             Devices.Add(new BioLEDDevice(100) { ChannelCount = 4, SerialNumber = "DEMO DEVICE", IsConnected = true });
+
+            Devices.Last().LEDs.Add(new LED() { Wavelength = 470, DeviceChannelIndex = 0, Device = Devices.Last() });
+            Devices.Last().LEDs.Add(new LED() { Wavelength = 590, DeviceChannelIndex = 1, Device = Devices.Last() });
+            SelectedDevice = Devices.Last();
             HasDevices = Devices.Count > 0;
             return;
         }
@@ -1038,38 +1005,38 @@ namespace LED_Controller
         {
             object o = App.Current.Resources["DIALOG_About"];
 
-            AboutViewModel vm = new AboutViewModel
+            AboutViewModel vm = new()
             {
-                Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
-                SettingsFilename = settingsfilename
+                Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version ??= new Version(0, 0, 0, 1),
+                SettingsFilename = settingsFilename
             };
             ((FrameworkElement)o).DataContext = vm;
-            var result = await DialogHost.Show(o);
+            _ = await DialogHost.Show(o);
         }
 
         private async void PresetIntensities_Click(object sender, RoutedEventArgs e)
         {
             object o = App.Current.Resources["DIALOG_PresetIntensities"];
-            PresetLEDIntensitiesViewModel vm = new PresetLEDIntensitiesViewModel() { PresetLEDIntensities = new ObservableCollection<double>(this.PresetIntensities.ToList()) };
+            PresetLEDIntensitiesViewModel vm = new() { PresetLEDIntensities = new ObservableCollection<double>([.. PresetIntensities]) };
             ((FrameworkElement)o).DataContext = vm;
 
-            var result = await DialogHost.Show(o);
+            _ = await DialogHost.Show(o);
 
-            this.PresetIntensities.Clear();
-            this.PresetIntensities.AddRangeUnique(vm.PresetLEDIntensities);
+            PresetIntensities.Clear();
+            PresetIntensities.AddRangeUnique(vm.PresetLEDIntensities);
         }
 
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
         {
             //Debug.Print("CollectionViewSource_Filter");
-            var led = e.Item as LED;
-            e.Accepted = IsCompactMode ? led.IsFavourite : true;
+            if (e.Item is not LED led)
+                return;
+            e.Accepted = !IsCompactMode || led.IsFavourite;
         }
 
         #endregion
 
         #region Logging
-
         public ObservableCollection<string> Logs
         {
             get { return (ObservableCollection<string>)GetValue(LogsProperty); }
@@ -1083,7 +1050,7 @@ namespace LED_Controller
 
         private void Log(string Message)
         {
-            this.Logs.Add(string.Format("{0}:\t{1}", Logs.Count, Message));
+            Logs.Add(string.Format("{0}:\t{1}", Logs.Count, Message));
             Debug.Print("Log: {0}", Message);
         }
 

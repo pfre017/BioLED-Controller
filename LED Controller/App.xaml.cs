@@ -18,7 +18,7 @@ namespace LED_Controller
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            this.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
+            Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
             base.OnStartup(e);
 
@@ -30,8 +30,8 @@ namespace LED_Controller
             if (e.Exception.Source == "MaterialDesignThemes.WPF")
                 return;
 
-            Helper.Controls.Dialogs.ExceptionViewer ev = new Helper.Controls.Dialogs.ExceptionViewer("An unexpected error occured in the application", e.Exception, this.MainWindow);
-            ev.ShowDialog();
+            Helper.Controls.Dialogs.ExceptionViewer ev = new("An unexpected error occured in the application", e.Exception, MainWindow);
+            _ = ev.ShowDialog();
             e.Handled = true;
         }
 
@@ -46,7 +46,7 @@ namespace LED_Controller
             }
             catch (Exception ex)
             {
-                Helper.Controls.Dialogs.ExceptionViewer ev = new Helper.Controls.Dialogs.ExceptionViewer("An unexpected error occured in PresetIntensity_Click", ex, this.MainWindow);
+                Helper.Controls.Dialogs.ExceptionViewer ev = new("An unexpected error occured in PresetIntensity_Click", ex, MainWindow);
             }
         }
     }

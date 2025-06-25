@@ -8,7 +8,7 @@ namespace LED_Controller.Common
 {
     public class AboutViewModel
     {
-        public Version Version { get; set; }
-        public string SettingsFilename { get; set; }
+        public Version Version { get; set; } = new Version(0, 0, 0, 0);
+        public string SettingsFilename { get; set; } = "";
     }
 }

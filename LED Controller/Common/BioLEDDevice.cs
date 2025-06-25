@@ -28,7 +28,7 @@ namespace LED_Controller.Common
 
         #region Properties
 
-        private ObservableCollection<LED> LEDs_ = new ObservableCollection<LED>();
+        private ObservableCollection<LED> LEDs_ = [];
         public ObservableCollection<LED> LEDs
         {
             get
@@ -37,22 +37,22 @@ namespace LED_Controller.Common
             }
             private set
             {
-                this.LEDs_ = value;
-                base.RaisePropertyChanged("LEDs");
-                base.RaisePropertyChanged("HasLEDs");
+                LEDs_ = value;
+                base.RaisePropertyChanged(nameof(LEDs));
+                base.RaisePropertyChanged(nameof(HasLEDs));
             }
         }
 
-        private void LEDs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void LEDs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            base.RaisePropertyChanged("HasLEDs");
+            base.RaisePropertyChanged(nameof(HasLEDs));
         }
 
         public bool HasLEDs
         {
             get
             {
-                return (LEDs_ == null) ? false : LEDs_.Count > 0;
+                return LEDs_ != null && LEDs_.Count > 0;
             }
         }
 
@@ -63,18 +63,18 @@ namespace LED_Controller.Common
             set
             {
                 ChannelCount_ = value;
-                base.RaisePropertyChanged("ChannelCount");
+                base.RaisePropertyChanged(nameof(ChannelCount));
             }
         }
 
-        private string SerialNumber_;
-        public string SerialNumber
+        private string? SerialNumber_;
+        public string? SerialNumber
         {
             get { return SerialNumber_; }
             set
             {
                 SerialNumber_ = value;
-                base.RaisePropertyChanged("SerialNumber");
+                base.RaisePropertyChanged(nameof(SerialNumber));
             }
         }
 
@@ -86,7 +86,7 @@ namespace LED_Controller.Common
             private set
             {
                 DeviceHandle_ = value;
-                base.RaisePropertyChanged("DeviceHandle");
+                base.RaisePropertyChanged(nameof(DeviceHandle));
             }
         }
 
@@ -98,7 +98,7 @@ namespace LED_Controller.Common
             set
             {
                 IsConneccted_ = value;
-                base.RaisePropertyChanged("IsConnected");
+                base.RaisePropertyChanged(nameof(IsConnected));
             }
         }
 
@@ -108,7 +108,7 @@ namespace LED_Controller.Common
 
         public override string ToString()
         {
-            return string.Format("Device ({0}), Handle = {1}, ChannelCount = {2}", this.SerialNumber, this.DeviceHandle, this.ChannelCount);
+            return $"Device ({SerialNumber}), Handle = {DeviceHandle}, ChannelCount = {ChannelCount}";
         }
 
     }

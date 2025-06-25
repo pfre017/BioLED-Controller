@@ -27,7 +27,7 @@ namespace LED_Controller.Common
             {
                 PresetLEDIntensitiesViewModel vm = (PresetLEDIntensitiesViewModel)e.Parameter;
 
-                if (vm.PresetLEDIntensities.Contains(vm.NewPresetLEDIntensityValue) == false)
+                if (vm.PresetLEDIntensities?.Contains(vm.NewPresetLEDIntensityValue) == false)
                     vm.PresetLEDIntensities.Add(vm.NewPresetLEDIntensityValue);
                 else
                     Debug.Print("PresetLEDIntensity {0} already present in list (not added)", vm.NewPresetLEDIntensityValue);
@@ -49,10 +49,14 @@ namespace LED_Controller.Common
             try
             {
                 PresetLEDIntensitiesViewModel vm = (PresetLEDIntensitiesViewModel)e.Parameter;
-
+                if (vm.PresetLEDIntensities == null)
+                {
+                    Debug.Print("Error: PresetLEDIntensities is null");
+                    return;
+                }
                 if (vm.PresetLEDIntensities.Contains(vm.SelectedLEDItensity))
                 {
-                    vm.PresetLEDIntensities.Remove(vm.SelectedLEDItensity);
+                    _ = vm.PresetLEDIntensities.Remove(vm.SelectedLEDItensity);
                 }
                 vm.SelectedLEDItensity = -1;
             }

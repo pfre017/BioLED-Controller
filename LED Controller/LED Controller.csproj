@@ -16,6 +16,7 @@
 		<ApplicationIcon>LED icon.ico</ApplicationIcon>
 		<StartupObject>LED_Controller.App</StartupObject>
 		<IsPublishable>False</IsPublishable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="HIDDLL.dll">
@@ -27,29 +28,42 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="ControlzEx" Version="7.0.0-rc0118" />
-		<PackageReference Include="MaterialDesignColors" Version="3.1.1-ci780" />
-		<PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci780" />
+		<PackageReference Include="ControlzEx" Version="7.0.1" />
+		<PackageReference Include="MaterialDesignColors" Version="5.2.2-ci998" />
+		<PackageReference Include="MaterialDesignThemes" Version="5.2.2-ci998" />
 		<PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
 		<PackageReference Include="NETStandard.Library" Version="2.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SNS.Helper" Version="4.4.2" />
-		<PackageReference Include="System.Buffers" Version="4.5.1" />
+		<PackageReference Include="SNS.Helper" Version="4.4.12" />
+		<PackageReference Include="System.Buffers" Version="4.6.1" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		<PackageReference Include="System.ComponentModel.Composition" Version="9.0.0-rc.2.24473.5" />
 		<PackageReference Include="System.Console" Version="4.3.1" />
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0-rc.2.24473.5" />
 		<PackageReference Include="System.IO" Version="4.3.0" />
-		<PackageReference Include="System.Memory" Version="4.5.5" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
 		<PackageReference Include="System.Net.Primitives" Version="4.3.1" />
-		<PackageReference Include="System.Numerics.Vectors" Version="4.6.0-preview5.19224.8" />
+		<PackageReference Include="System.Numerics.Vectors" Version="4.6.1" />
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
 		<PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 		<PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 </Project>

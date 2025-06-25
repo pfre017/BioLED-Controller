@@ -131,9 +131,10 @@
         <Grid >
             <ComboBox Grid.Row="0" HorizontalAlignment="Left"
                       Style="{DynamicResource MaterialDesignFloatingHintComboBox}"
-                ItemsSource="{StaticResource DefaultWavelengths}"
-                IsEditable="True"
-                ToolTip="Wavelength"
+                    ItemsSource="{StaticResource DefaultWavelengths}"
+                    IsEditable="True"
+                    ToolTip="Wavelength"
+                      md:TextFieldAssist.SuffixText="nm"
                       md:HintAssist.Hint="Wavelength" md:HintAssist.IsFloating="True">
                 <ComboBox.ItemTemplate>
                     <DataTemplate >
@@ -283,7 +284,7 @@
     </StackPanel>
 
     <StackPanel  x:Key="Dialog_NoBioLEDDevices" Margin="20">
-        <TextBlock Text="No MightEx BioLED devices could be found"  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+        <TextBlock Text="No MightEx BioLED devices could be found."  Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
         <Button Style="{StaticResource MaterialDesignFlatButton}" Content="OK"
                 Command="md:DialogHost.CloseDialogCommand"></Button>
     </StackPanel>

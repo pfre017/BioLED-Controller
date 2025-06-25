@@ -75,7 +75,6 @@ namespace LED_Controller.Common
 
             return Color.FromArgb(255, Convert.ToByte(SSS * R * 255), Convert.ToByte(SSS * G * 255), Convert.ToByte(SSS * B * 255));
         }
-
     }
 
     public class NotEmptyValidationRule : ValidationRule
