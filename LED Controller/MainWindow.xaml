@@ -12,7 +12,7 @@
         Style="{StaticResource MaterialDesignWindow}"
         m:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
-        Title="LED Controller" 
+        Title="BioLED Controller" 
         Loaded="Window_Loaded">
     <Window.FontFamily>
         <md:MaterialDesignFont></md:MaterialDesignFont>
@@ -27,176 +27,180 @@
     </Window.Resources>
 
     <md:DialogHost x:Name="dialoghost" SnackbarMessageQueue="{Binding ElementName=snackbar, Path=MessageQueue}" Margin="10" Background="{StaticResource MaterialDesign.Brush.Background}">
-        <md:DrawerHost >
-            <md:DrawerHost.BottomDrawerContent>
-                <ListBox x:Name="Logger" VerticalAlignment="Stretch" MinHeight="50" ItemsSource="{Binding Logs}"
-                     ScrollViewer.CanContentScroll="False" MaxHeight="200"
-                     Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}"></ListBox>
-            </md:DrawerHost.BottomDrawerContent>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <!--<HelperControls:ImageButton ImageSource="Icons/appbar.add.png"
-                                            Command="{x:Static LEDController:MainWindow.AddLED}" ToolTip="Add LED">Add</HelperControls:ImageButton>-->
-                <!--<CheckBox IsChecked="{Binding IsShutterOpen, Converter={StaticResource InverseBoolConverter}}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="txtblock" Text="{Binding ShutterButtonText, FallbackValue=Shutter}"></TextBlock>
-                            </StackPanel>
-                        </CheckBox>-->
-                <!--<HelperControls:ImageButton ImageSource="Icons/appbar.camera.flash.off.selected.png"
-                                            Command="{x:Static LEDController:MainWindow.AllLEDsOffCommand}" ToolTip="Disable All LEDs">All Off</HelperControls:ImageButton>-->
-
-                <md:ColorZone Grid.Row="0" Mode="PrimaryDark">
-                    <DockPanel>
-                        <md:PopupBox
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>   <!--SPLITTER-->
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <md:ColorZone Grid.Row="0" Mode="PrimaryDark">
+                <DockPanel>
+                    <md:PopupBox
                               DockPanel.Dock="Right"
                               PlacementMode="BottomAndAlignRightEdges">
-                            <Grid Width="300">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Button Click="Connect_Click" Grid.Row="0">Scan for Devices</Button>
-                                <md:PackIcon Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        <Grid Width="300">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button Click="Connect_Click" Grid.Row="0">Scan for Devices</Button>
+                            <md:PackIcon Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                                          Width="25" Height="25"
 							        Margin="20 0 16 0"
 							        Kind="Magnify" />
-                                <!--<CheckBox IsChecked="{Binding IsSafeModeChangeEndabled}" VerticalContentAlignment="Center" Margin="0,8,0,8">Enable Safe Mode Changing</CheckBox>-->
-                                <Button Click="ArduinoDialog_Click" Grid.Row="1">Arduino Connectivity</Button>
-                                <TextBlock Text="Dark UI" Grid.Row="2" Margin="16,15"></TextBlock>
-                                <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsDarkUIMode}" Grid.Row="2" HorizontalAlignment="Right"></ToggleButton>
-                                <TextBlock Text="Compact Mode" Grid.Row="3" Margin="16,15"></TextBlock>
-                                <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsCompactMode}" Grid.Row="3" HorizontalAlignment="Right"></ToggleButton>
-                                <Button Click="PresetIntensities_Click" Grid.Row="4">Preset Intensities</Button>
-                                <md:PackIcon Kind="Numbers" Grid.Row="4" HorizontalAlignment="Right" Margin="20 0 16 0" Width="25" Height="25" VerticalAlignment="Center"></md:PackIcon>
-                                <Separator Grid.Row="5"></Separator>
-                                <Button Click="About_Click" Grid.Row="6">About</Button>
-                                <md:PackIcon Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Margin="20 0 16 0" Kind="Help"/>
-                                <Button Grid.Row="7"
-                                    Command="{x:Static md:DrawerHost.OpenDrawerCommand}"
-                                    CommandParameter="{x:Static Dock.Bottom}">View Log</Button>
-                                <md:PackIcon Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Margin="20 0 16 0" Kind="MessageAlert"/>
-                                <Button Click="Exit_Click" Grid.Row="8">Exit</Button>
-                            </Grid>
-                        </md:PopupBox>
-                        <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                            <TextBlock  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="LED Controller - Peter S.Freestone 2018" Margin="10,5" VerticalAlignment="Center" ></TextBlock>
-                            <TextBlock  Style="{StaticResource MaterialDesignBodyMediumTextBlock}" FontStyle="Italic" Text="Peter S.Freestone 2018" Margin="10,0" VerticalAlignment="Center"></TextBlock>
-                        </StackPanel>
-                    </DockPanel>
-                </md:ColorZone>
-                <GroupBox Grid.Row="1" Header="Devices" x:Name="DevicesGroupBox" Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}">
-                    <Grid>
-                        <ListBox ItemsSource="{Binding Devices}"
+                            <!--<CheckBox IsChecked="{Binding IsSafeModeChangeEndabled}" VerticalContentAlignment="Center" Margin="0,8,0,8">Enable Safe Mode Changing</CheckBox>-->
+                            <Button Click="ArduinoDialog_Click" Grid.Row="1">Arduino Connectivity</Button>
+                            <TextBlock Text="Dark UI" Grid.Row="2" Margin="16,15"></TextBlock>
+                            <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsDarkUIMode}" Grid.Row="2" HorizontalAlignment="Right"></ToggleButton>
+                            <TextBlock Text="Compact Mode" Grid.Row="3" Margin="16,15"></TextBlock>
+                            <ToggleButton Margin="20 0 16 0" IsChecked="{Binding IsCompactMode}" Grid.Row="3" HorizontalAlignment="Right"></ToggleButton>
+                            <Button Click="PresetIntensities_Click" Grid.Row="4">Preset Intensities</Button>
+                            <md:PackIcon Kind="Numbers" Grid.Row="4" HorizontalAlignment="Right" Margin="20 0 16 0" Width="25" Height="25" VerticalAlignment="Center"></md:PackIcon>
+                            <Separator Grid.Row="5"></Separator>
+                            <Button Click="About_Click" Grid.Row="6">About</Button>
+                            <md:PackIcon Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Margin="20 0 16 0" Kind="Help"/>
+                            <TextBlock Text="Show Log" Grid.Row="7" Margin="16,15"></TextBlock>
+                            <ToggleButton Grid.Row="7" IsChecked="{Binding ShowLog}" Margin="20 0 16 0" HorizontalAlignment="Right"></ToggleButton>
+                            <Button Click="Exit_Click" Grid.Row="8">Exit</Button>
+                        </Grid>
+                    </md:PopupBox>
+                    <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                        <TextBlock  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="BioLED Controller" Margin="10,10,0,0" VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock  Style="{StaticResource MaterialDesignBodySmallTextBlock}" FontStyle="Italic" Text="Peter S. Freestone 2018" Margin="10,0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </DockPanel>
+            </md:ColorZone>
+            <GroupBox Grid.Row="1" Header="Devices" x:Name="DevicesGroupBox" Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                <Grid>
+                    <ListBox ItemsSource="{Binding Devices}"
                          SelectedItem="{Binding SelectedDevice}" Visibility="{Binding HasDevices, Converter={StaticResource BoolVisibilityConverter}}">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel IsItemsHost="True" ></WrapPanel>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>
-                        <StackPanel Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolVisibilityConverter}}" Margin="10">
-                            <md:ColorZone Mode="SecondaryLight" Foreground="White">
-                                <TextBlock Text="No devices" Style="{StaticResource MaterialDesignButtonTextBlock}"
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" ></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <StackPanel Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolVisibilityConverter}}" Margin="10">
+                        <md:ColorZone Mode="SecondaryLight" Foreground="White">
+                            <TextBlock Text="No devices" Style="{StaticResource MaterialDesignButtonTextBlock}"
                                            HorizontalAlignment="Center"
                                            ></TextBlock>
-                            </md:ColorZone>
-                            <Button Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Margin="10"
+                        </md:ColorZone>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" Margin="10"
                                 Click="CreateDEMODevice_Click">Create DEMO Device</Button>
-                        </StackPanel>
-                        <md:TransitioningContent OpeningEffect="{md:TransitionEffect SlideInFromRight, Duration=0:0:1.2}">
-                            <StackPanel Grid.Row="0"  HorizontalAlignment="Right" Orientation="Horizontal"
+                    </StackPanel>
+                    <md:TransitioningContent OpeningEffect="{md:TransitionEffect SlideInFromRight, Duration=0:0:1.2}">
+                        <StackPanel Grid.Row="0"  HorizontalAlignment="Right" Orientation="Horizontal"
                               VerticalAlignment="Top"
                               Margin="0 -30 16 -20">
-                                <Button
+                            <Button
                                Command="{x:Static LEDController:MainWindow.ScanDevicesCommand}" ToolTip="Scan for Devices"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
-                                    <md:PackIcon Kind="Magnify" />
-                                </Button>
-                                <Button Visibility="{Binding SelectedDevice, Converter={StaticResource NullVisibilityConverter}}"
+                                <md:PackIcon Kind="Magnify" />
+                            </Button>
+                            <Button Visibility="{Binding SelectedDevice, Converter={StaticResource NullVisibilityConverter}}"
                                         Command="{x:Static LEDController:MainWindow.RemoveDeviceCommand}" ToolTip="Remove Device"
                                         CommandParameter="{Binding SelectedDevice}"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
-                                    <md:PackIcon Kind="Delete" />
-                                </Button>
-                            </StackPanel>
-                        </md:TransitioningContent>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="LEDs" Grid.Row="2" x:Name="LEDGroupBox"  Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}">
-                    <Grid Grid.Row="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
+                                <md:PackIcon Kind="Delete" />
+                            </Button>
+                        </StackPanel>
+                    </md:TransitioningContent>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="LEDs" Grid.Row="2" x:Name="LEDGroupBox"  Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
-                        <ListBox Grid.Row="0"  ItemsSource="{Binding SelectedDevice.LEDs}" ScrollViewer.CanContentScroll="False"
+                    <ListBox Grid.Row="0"  ItemsSource="{Binding SelectedDevice.LEDs}" ScrollViewer.CanContentScroll="False"
                              SelectedItem="{Binding SelectedLED}"
                 SelectionMode="Single" >
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel IsItemsHost="True" ></WrapPanel>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>
-                        <md:TransitioningContent OpeningEffect="{md:TransitionEffect SlideInFromRight, Duration=0:0:1.2}">
-                            <StackPanel Grid.Row="0"  HorizontalAlignment="Right" Orientation="Horizontal"
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" ></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <md:TransitioningContent OpeningEffect="{md:TransitionEffect SlideInFromRight, Duration=0:0:1.2}">
+                        <StackPanel Grid.Row="0"  HorizontalAlignment="Right" Orientation="Horizontal"
                               VerticalAlignment="Top" x:Name="LEDButtons_StackPanel"
                               Margin="0 -30 16 -20">
-                                <Button
+                            <Button
                                Command="{x:Static LEDController:MainWindow.AddLEDCommand}" ToolTip="Add LED"
                         CommandParameter="{Binding SelectedDevice}"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
-                                    <md:PackIcon
+                                <md:PackIcon
         Kind="Plus" />
-                                </Button>
-                                <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
+                            </Button>
+                            <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
                                Command="{x:Static LEDController:MainWindow.EditLEDCommand}" ToolTip="Edit LED"
                         CommandParameter="{Binding SelectedLED}"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
-                                    <md:PackIcon
+                                <md:PackIcon
         Kind="Pencil" />
-                                </Button>
-                                <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
+                            </Button>
+                            <Button Visibility="{Binding SelectedLED, Converter={StaticResource NullVisibilityConverter}}"
                                Command="{x:Static LEDController:MainWindow.RemoveLEDCommand}" ToolTip="Remove LED"
                         CommandParameter="{Binding SelectedLED}"
                               Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Margin="20,0,0,0">
-                                    <md:PackIcon
+                                <md:PackIcon
         Kind="Delete" />
-                                </Button>
-                            </StackPanel>
-                        </md:TransitioningContent>
-                    </Grid>
-                </GroupBox>
-                <ListBox Grid.Row="2"  ItemsSource="{Binding Source={StaticResource FavouriteLEDs}}" ScrollViewer.CanContentScroll="False" 
+                            </Button>
+                        </StackPanel>
+                    </md:TransitioningContent>
+                </Grid>
+            </GroupBox>
+            <ListBox Grid.Row="2"  ItemsSource="{Binding Source={StaticResource FavouriteLEDs}}" ScrollViewer.CanContentScroll="False" 
                      Visibility="{Binding IsCompactMode, Converter={StaticResource BoolVisibilityConverter}}"
                      SelectedItem="{Binding SelectedLED}"
                 SelectionMode="Single" >
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" ></WrapPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-                <!--<GridSplitter Grid.Row="3" Grid.ColumnSpan="2"  Background="{StaticResource Red}"
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" ></WrapPanel>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+            <!--<GridSplitter Grid.Row="3" Grid.ColumnSpan="2"  Background="{StaticResource Red}"
                           HorizontalAlignment="Stretch" 
                           VerticalAlignment="Stretch" Height="10"
                           Visibility="{Binding IsCompactMode, Converter={StaticResource InverseBoolVisibilityConverter}}"></GridSplitter>-->
 
+            <GridSplitter Visibility="{Binding ShowLog, Converter={StaticResource BoolVisibilityConverter}}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MaterialDesignGridSplitter}" Height="10" Grid.Row="3"></GridSplitter>
 
-                <md:Snackbar Grid.RowSpan="99" VerticalAlignment="Bottom" x:Name="snackbar" MessageQueue="{md:MessageQueue}"></md:Snackbar>
+            <Grid Visibility="{Binding ShowLog, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="4" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Log" Grid.Row="0" Style="{StaticResource MaterialDesignBodyMediumTextBlock}"></TextBlock>
+                <ListBox x:Name="Logger" MinHeight="50" ItemsSource="{Binding Logs}"
+                     ScrollViewer.CanContentScroll="False" Grid.Row="1">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Setter Property="Margin" Value="0"></Setter>
+                            <Setter Property="Padding" Value="0,1"></Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate >
+                            <TextBlock Text="{Binding }" TextWrapping="Wrap" Margin="0,0"></TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
-        </md:DrawerHost>
+            <md:Snackbar Grid.RowSpan="99" VerticalAlignment="Bottom" x:Name="snackbar" MessageQueue="{md:MessageQueue}"></md:Snackbar>
+        </Grid>
     </md:DialogHost>
 </Window>

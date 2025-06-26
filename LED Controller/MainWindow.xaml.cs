@@ -102,6 +102,10 @@ namespace LED_Controller
         public static readonly DependencyProperty IsCompactModeProperty =
             DependencyProperty.Register("IsCompactMode", typeof(bool), typeof(MainWindow), new PropertyMetadata(false, OnIsCompactModeChanged));
 
+
+
+
+
         private static void OnIsCompactModeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
 
@@ -992,10 +996,10 @@ namespace LED_Controller
         private void CreateDEMODevice_Click(object sender, RoutedEventArgs e)
         {
             Devices.Clear();
-            Devices.Add(new BioLEDDevice(100) { ChannelCount = 4, SerialNumber = "DEMO DEVICE", IsConnected = true });
+            Devices.Add(new BioLEDDevice(123456) { ChannelCount = 4, SerialNumber = "DEMO DEVICE", IsConnected = true });
 
-            Devices.Last().LEDs.Add(new LED() { Wavelength = 470, DeviceChannelIndex = 0, Device = Devices.Last() });
-            Devices.Last().LEDs.Add(new LED() { Wavelength = 590, DeviceChannelIndex = 1, Device = Devices.Last() });
+            Devices.Last().LEDs.Add(new LED() { Wavelength = 470, DeviceChannelIndex = 1, Device = Devices.Last() });
+            Devices.Last().LEDs.Add(new LED() { Wavelength = 590, DeviceChannelIndex = 2, Device = Devices.Last(), IsFavourite = true });
             SelectedDevice = Devices.Last();
             HasDevices = Devices.Count > 0;
             return;
@@ -1037,6 +1041,18 @@ namespace LED_Controller
         #endregion
 
         #region Logging
+        public bool ShowLog
+        {
+            get { return (bool)GetValue(ShowLogProperty); }
+            set { SetValue(ShowLogProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowLog.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowLogProperty =
+            DependencyProperty.Register("ShowLog", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+
+
+
         public ObservableCollection<string> Logs
         {
             get { return (ObservableCollection<string>)GetValue(LogsProperty); }

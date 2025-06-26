@@ -71,8 +71,8 @@
                                     <RotateTransform Angle="270"></RotateTransform>
                                 </TextBlock.LayoutTransform>
                             </TextBlock>
-                            <md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
-                          ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>
+                            <!--<md:PackIcon Kind="ErrorOutline" Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                          ToolTip="Device not connected" HorizontalAlignment="Center"></md:PackIcon>-->
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                             <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" md:ColorZoneAssist.Mode="SecondaryMid" Width="50" Height="50" IsChecked="{Binding IsOn}" Margin="4,4"
@@ -148,8 +148,8 @@
             </DataTemplate>
 
             <DataTemplate x:Key="LEDIconTemplate" DataType="{x:Type LEDControllerCommon:LED}">
-                <Button Margin="2" Background="{Binding Fill}" Opacity="0.5"
-     Style="{StaticResource MaterialDesignRaisedLightButton}" >
+                <Button Margin="2" Background="{Binding Fill}" BorderBrush="Transparent"
+     Style="{StaticResource MaterialDesignRaisedLightButton}" Opacity="0.8">
                     <TextBlock Text="{Binding Wavelength}"></TextBlock>
                     <Button.ToolTip>
                         <TextBlock Text="{Binding Wavelength, StringFormat={}{0} nm}"></TextBlock>

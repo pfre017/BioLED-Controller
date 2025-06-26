@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+		<RootNamespace>LED_Controller</RootNamespace>
+		<Nullable>enable</Nullable>
+		<Version>3.0.1</Version>
+		<UseWPF>true</UseWPF>
+		<LangVersion>preview</LangVersion>
+		<PlatformTarget>x86</PlatformTarget>
+		<Platforms>AnyCPU;x86</Platforms>
+		<Copyright>Peter S. Freestone 2018</Copyright>
+		<Description>Modern UX for controlling MightEx BioLED devices</Description>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ApplicationIcon>LED icon.ico</ApplicationIcon>
+		<StartupObject>LED_Controller.App</StartupObject>
+		<IsPublishable>False</IsPublishable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Company>Peter S. Freestone</Company>
+		<PackageIcon>LED icon.PNG</PackageIcon>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="HIDDLL.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Resource Include="LED icon.ico" />
+		<Content Include="Mightex_BLSDriver_SDK.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MaterialDesignColors" Version="5.2.2-ci998" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
+		<PackageReference Include="NETStandard.Library" Version="2.0.3" />
+		<PackageReference Include="SNS.Helper" Version="4.4.12" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Images\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\LED icon.PNG">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>
