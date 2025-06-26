@@ -2,7 +2,7 @@
 
 ![main view (light mode)](https://github.com/user-attachments/assets/846872fc-f9ca-4495-8687-47de6e9c514e)
 
-Motivated by the need to reclaim valuable screen real-estate while maintaining core functionailty, BioLED Controller provides a focussed and compact UX for controlling MightEx BioLED hardware (e.g. BLS series).
+Motivated by the need to reclaim valuable screen real-estate while maintaining core functionailty, BioLED Controller provides a focussed and compact UX for controlling MightEx BioLED hardware (e.g. [BLS series](https://www.mightexsystems.com/product/bioled-light-source-control-modules-software-ttl-controlled/)).
 
 ![original to modern UX-01](https://github.com/user-attachments/assets/268c60c3-d8be-49ab-a64d-a3bcd33c43ac)
 
