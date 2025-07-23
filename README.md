@@ -1,36 +1,56 @@
-# BioLED Controller
+# 🔬 BioLED Controller  
+**Modern WPF-based desktop application for precise control of Mightex BioLED devices**
 
-![main view (light mode)](https://github.com/user-attachments/assets/846872fc-f9ca-4495-8687-47de6e9c514e)
+![Main Window - Light Mode](https://github.com/user-attachments/assets/846872fc-f9ca-4495-8687-47de6e9c514e)
 
-Motivated by the need to reclaim valuable screen real-estate while maintaining core functionailty, BioLED Controller provides a focussed and compact UX for controlling MightEx BioLED hardware (e.g. [BLS series](https://www.mightexsystems.com/product/bioled-light-source-control-modules-software-ttl-controlled/)).
+---
 
-![original to modern UX-01](https://github.com/user-attachments/assets/268c60c3-d8be-49ab-a64d-a3bcd33c43ac)
+## ✨ Summary
+BioLED Controller is a modern, space-efficient and user-friendly Windows application designed to control **Mightex BioLED light modules** (e.g., BLS-series) for use in laboratory and microscopy environments. Developed using **C# and WPF**, the application prioritizes UI simplicity, compact design, and hardware integration via both **DLL-based SDKs** and **custom Arduino interfaces**.
 
-Screen area used: BioLED Controller Compact **2%** < BioLED Controller Full Function **9%** < Original (MightEx) **19%** (not resizable)
+---
 
+## 💡 Key Features
+- ✅ **Compact UX**: Uses only 2–9% of screen real estate compared to 19% for Mightex’s original controller.
+- 🎨 **Modern Material Design UI**: Implemented using [MaterialDesignInXAML Toolkit](https://github.com/MaterialDesignInXAML).
+- 🌓 **Dark Mode Support**: Designed for light-sensitive lab environments.
+- 📦 **Resizability**: Scales from full UI to ultra-compact mode without losing functionality.
+- 🔌 **Hardware Integration**:
+  - Direct control of BLS-series devices via `Mightex_BLSDriver_SDK.dll`.
+  - Serial communication to custom Arduino hardware for additional controls.
 
+---
 
-## Clean Menus and Dialogs
+## 🧪 Enhanced Functionality
 
-| Edit LED dialog (light mode)  | Menu (dark mode) |
-| ------------- | ------------- |
-| ![edit_dialog](https://github.com/user-attachments/assets/1c18cf31-23e7-458c-8cf3-4aad584c495f)  |  ![menu (dark mode)](https://github.com/user-attachments/assets/d285bf93-55dc-46e8-ac94-617221c17b06) | 
+### Clean Menus and Dialogs
+| Edit LED Dialog (light) | Menu (dark) |
+|--------------------------|-------------|
+| ![Edit Dialog](https://github.com/user-attachments/assets/1c18cf31-23e7-458c-8cf3-4aad584c495f) | ![Menu Dark](https://github.com/user-attachments/assets/d285bf93-55dc-46e8-ac94-617221c17b06) |
 
+### Customizable Presets
+Users can create and switch between preset intensity levels for rapid configuration changes.
 
+![LED Intensity Presets](https://github.com/user-attachments/assets/142deb44-40a3-4059-8051-202b905b3ef8)
 
-## Improved functionality: Customizable preset LED intensity values for quick changes
+---
 
-![LED intensity presets (dark mode)](https://github.com/user-attachments/assets/142deb44-40a3-4059-8051-202b905b3ef8)
+## 🔧 Technical Stack
+- **Frontend**: WPF (.NET 9.0), MaterialDesignXAML
+- **Backend**: C#, MVVM pattern, DLL interop
+- **Hardware**:
+  - `Mightex_BLSDriver_SDK.dll` for LED control
+  - `SerialPort` communication with Arduino microcontrollers
+- **Setup**: Visual Studio solution with deployment packaging (`.vdproj`)
 
+---
 
+## 🛠 Additional Tools
+Includes a standalone legacy WinForms utility (`CommunicateWithArduino`) to test and debug serial communication with Arduino-based devices.
 
-## Key features
-+ Modern design utilizing [MaterialDesign in XAML Toolkit](https://github.com/MaterialDesignInXAML)
-+ Resizable window plus compact view
-+ Dark mode for light-sensitive environments (e.g. fluorescent microscopy experiments)
-+ C# / WPF 
-+ Hardware connectivity to BLS-series devices through DLL calls to `Mightex_BLSDriver_SDK.dll`
-+ Custom DIY control interface via Arduino connectivity (under development)
+---
 
-
-
+## 💻 Example Use Cases
+- Neuroscience or fluorescence microscopy labs needing compact, responsive LED control.
+- Teaching labs integrating DIY Arduino-based controllers.
+- Developers modernizing legacy device interfaces for clinical or research environments.
