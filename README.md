@@ -4,6 +4,7 @@
 ![Main Window - Light Mode](https://github.com/user-attachments/assets/846872fc-f9ca-4495-8687-47de6e9c514e)
 
 ---
+<img width="5334" height="2994" alt="original to modern UX-01" src="https://github.com/user-attachments/assets/bfb02609-54ab-4604-ba11-3408556982c5" />
 
 ## ✨ Summary
 BioLED Controller is a modern, space-efficient and user-friendly Windows application designed to control **Mightex BioLED light modules** (e.g., BLS-series) for use in laboratory and microscopy environments. Developed using **C# and WPF**, the application prioritizes UI simplicity, compact design, and hardware integration via both **DLL-based SDKs** and **custom Arduino interfaces**.
